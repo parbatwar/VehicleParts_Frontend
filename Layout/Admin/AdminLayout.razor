@@ -1,0 +1,24 @@
+﻿@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <aside class="app-sidebar">
+        <AdminNavMenu />
+    </aside>
+
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-right">
+                <button class="icon-btn">
+                    <i class="far fa-bell"></i>
+                    <span class="indicator"></span>
+                </button>
+            </div>
+        </header>
+
+        <main class="app-content">
+            <div class="content-wrapper">
+                @Body
+            </div>
+        </main>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+﻿@* @page "/admin/home" *@
+@page "/"
+@layout AdminLayout
+
+<div class="dashboard">
+
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-sub">Welcome back, Alex. Here's what's happening today.</p>
+        </div>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Total Parts</span>
+                <span class="stat-value">4,821</span>
+                <span class="stat-change up">+12% this month</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Staff Members</span>
+                <span class="stat-value">38</span>
+                <span class="stat-change up">+2 this month</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Monthly Revenue</span>
+                <span class="stat-value">$94,200</span>
+                <span class="stat-change up">+8.4% vs last month</span>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-label">Low Stock Alerts</span>
+                <span class="stat-value">17</span>
+                <span class="stat-change down">Needs attention</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity + Quick Stats -->
+    <div class="bottom-grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Recent Activity</span>
+                <span class="card-link">View all</span>
+            </div>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-dot orange"></div>
+                    <div class="activity-text">
+                        <span class="activity-main">Brake Pads (x50) restocked</span>
+                        <span class="activity-time">2 hours ago</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot blue"></div>
+                    <div class="activity-text">
+                        <span class="activity-main">New staff member added — Jordan Lee</span>
+                        <span class="activity-time">5 hours ago</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot green"></div>
+                    <div class="activity-text">
+                        <span class="activity-main">Invoice #4821 marked as paid</span>
+                        <span class="activity-time">Yesterday</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot red"></div>
+                    <div class="activity-text">
+                        <span class="activity-main">Oil Filters stock below threshold</span>
+                        <span class="activity-time">Yesterday</span>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-dot orange"></div>
+                    <div class="activity-text">
+                        <span class="activity-main">Spark Plugs (x100) restocked</span>
+                        <span class="activity-time">2 days ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Top Selling Parts</span>
+                <span class="card-link">View report</span>
+            </div>
+            <div class="parts-list">
+                <div class="part-item">
+                    <span class="part-name">Brake Pads</span>
+                    <div class="part-bar-wrap">
+                        <div class="part-bar" style="width:85%"></div>
+                    </div>
+                    <span class="part-count">850</span>
+                </div>
+                <div class="part-item">
+                    <span class="part-name">Oil Filters</span>
+                    <div class="part-bar-wrap">
+                        <div class="part-bar" style="width:72%"></div>
+                    </div>
+                    <span class="part-count">720</span>
+                </div>
+                <div class="part-item">
+                    <span class="part-name">Spark Plugs</span>
+                    <div class="part-bar-wrap">
+                        <div class="part-bar" style="width:60%"></div>
+                    </div>
+                    <span class="part-count">600</span>
+                </div>
+                <div class="part-item">
+                    <span class="part-name">Air Filters</span>
+                    <div class="part-bar-wrap">
+                        <div class="part-bar" style="width:48%"></div>
+                    </div>
+                    <span class="part-count">480</span>
+                </div>
+                <div class="part-item">
+                    <span class="part-name">Wiper Blades</span>
+                    <div class="part-bar-wrap">
+                        <div class="part-bar" style="width:35%"></div>
+                    </div>
+                    <span class="part-count">350</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

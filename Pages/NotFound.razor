@@ -1,0 +1,77 @@
+﻿@page "/not-found"
+
+<div class="error-page">
+    <div class="error-card">
+        <div class="error-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h1 class="error-code">404</h1>
+        <h3 class="error-title">Page Not Found</h3>
+        <p class="error-text">
+            Sorry, the page you are looking for doesn't exist or has been moved.
+        </p>
+        <NavLink href="/admin/dashboard" class="btn-primary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </NavLink>
+    </div>
+</div>
+
+<style>
+    .error-page {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 70vh; /* Centers the card vertically in the content area */
+        padding: 2rem;
+    }
+
+    .error-card {
+        max-width: 450px;
+        width: 100%;
+        background: var(--bg-card); /* Pure White */
+        border: 1px solid var(--border-color); /* Pale Gray Border */
+        border-radius: var(--radius-lg); /* Large Rounded Corners */
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    .error-icon {
+        font-size: 3rem;
+        color: var(--brand-primary); /* Amber / Orange */
+        margin-bottom: 1.5rem;
+    }
+
+    .error-code {
+        font-size: 4rem;
+        font-weight: 800;
+        color: var(--brand-dark); /* Deep Navy */
+        margin: 0;
+        line-height: 1;
+    }
+
+    .error-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-main); /* Near Black */
+        margin: 1rem 0 0.5rem;
+    }
+
+    .error-text {
+        color: var(--text-muted); /* Medium Gray */
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    /* Back to Dashboard Button */
+    ::deep .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        text-decoration: none;
+        font-size: 14px;
+        /* transition and background are already handled in app.css btn-primary */
+    }
+</style>

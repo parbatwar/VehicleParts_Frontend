@@ -1,0 +1,47 @@
+﻿<div class="sidebar">
+    <div class="sidebar-header">
+        <div class="brand-icon">
+            <i class="fas fa-car-side"></i>
+        </div>
+        <div class="brand-details">
+            <span class="brand-name">VehicleParts</span>
+            <span class="brand-tagline">Management Pro</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+            <i class="fas fa-th-large"></i>
+            <span>Dashboard</span>
+        </NavLink>
+
+        <span class="nav-label">Operations</span>
+        <NavLink class="nav-link" href="/admin/staff">
+            <i class="fas fa-user-shield"></i>
+            <span>Staff Management</span>
+        </NavLink>
+        <NavLink class="nav-link" href="/admin/parts">
+            <i class="fas fa-boxes"></i>
+            <span>Inventory</span>
+        </NavLink>
+
+        <span class="nav-label">Analytics</span>
+        <NavLink class="nav-link" href="/admin/finance">
+            <i class="fas fa-chart-line"></i>
+            <span>Revenue Reports</span>
+        </NavLink>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="user-card">
+            <div class="user-avatar">AR</div>
+            <div class="user-info">
+                <span class="user-name">Alex Rivera</span>
+                <span class="user-role">System Admin</span>
+            </div>
+            <NavLink href="/logout" class="logout-btn" title="Sign Out">
+                <i class="fas fa-power-off"></i>
+            </NavLink>
+        </div>
+    </div>
+</div>
