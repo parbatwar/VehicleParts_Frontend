@@ -1,89 +1,101 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import api from '../api/axios'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../api/axios';
 
 function Login() {
-  const navigate = useNavigate()
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      const response = await api.post('/auth/login', form)
-      const { token, role, fullName } = response.data
+      const { data } = await api.post('/auth/login', form);
+      const { token, role, fullName } = data;
 
-      // Save to localStorage
-      localStorage.setItem('token', token)
-      localStorage.setItem('role', role)
-      localStorage.setItem('fullName', fullName)
+      // Persistence
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      localStorage.setItem('fullName', fullName);
 
-      // Redirect based on role
-      if (role === 'Admin') navigate('/admin/dashboard')
-      else if (role === 'Staff') navigate('/staff/dashboard')
-      else if (role === 'Customer') navigate('/customer/dashboard')
+      // Role-based Routing
+      const routes = {
+        Admin: '/admin/dashboard',
+        Staff: '/staff/dashboard',
+        Customer: '/customer/dashboard',
+      };
 
+      navigate(routes[role] || '/');
     } catch (err) {
-      setError('Invalid email or password.')
+      const message = err.response?.data?.message || 'CRITICAL SYSTEM ERROR: ACCESS DENIED';
+      setError(message.toUpperCase());
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h2 style={styles.title}>Vehicle Parts System</h2>
-        <p style={styles.subtitle}>Sign in to your account</p>
+        <header style={styles.header}>
+          <div style={styles.icon}>⚙️</div>
+          <h1 style={styles.title}>VEHICLE PARTS</h1>
+          <p style={styles.subtitle}>garage access system</p>
+        </header>
 
-        {error && <p style={styles.error}>{error}</p>}
+        {error && <div style={styles.error}>{error}</div>}
 
-        <form onSubmit={handleLogin}>
-          <div style={styles.field}>
-            <label>Email</label>
+        <form onSubmit={handleLogin} style={styles.form}>
+          <div style={styles.inputGroup}>
             <input
               type="email"
               name="email"
+              placeholder="EMAIL ADDRESS"
               value={form.email}
               onChange={handleChange}
               style={styles.input}
-              placeholder="Enter your email"
+              disabled={loading}
               required
             />
           </div>
-
-          <div style={styles.field}>
-            <label>Password</label>
+          
+          <div style={styles.inputGroup}>
             <input
               type="password"
               name="password"
+              placeholder="PASSWORD"
               value={form.password}
               onChange={handleChange}
               style={styles.input}
-              placeholder="Enter your password"
+              disabled={loading}
               required
             />
           </div>
 
-          <button
-            type="submit"
-            style={styles.button}
+          <button 
+            type="submit" 
+            style={{
+                ...styles.button, 
+                opacity: loading ? 0.6 : 1,
+                cursor: loading ? 'not-allowed' : 'pointer'
+            }} 
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'IGNITING...' : 'START ENGINE'}
           </button>
         </form>
       </div>
     </div>
-  )
+  );
 }
 
 const styles = {
@@ -91,55 +103,89 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#f0f2f5'
+    minHeight: '100vh',
+    backgroundColor: '#0a0a0a',
+    backgroundImage: 'radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px)',
+    backgroundSize: '24px 24px',
+    fontFamily: 'system-ui, -apple-system, sans-serif',
   },
   card: {
-    backgroundColor: 'white',
-    padding: '40px',
-    borderRadius: '10px',
-    boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+    backgroundColor: '#141414',
+    padding: '48px 40px',
+    borderRadius: '4px',
+    border: '1px solid #222',
     width: '100%',
-    maxWidth: '400px'
+    maxWidth: '380px',
+    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '40px',
+  },
+  icon: {
+    fontSize: '40px',
+    marginBottom: '12px',
+    filter: 'drop-shadow(0 0 10px rgba(243, 156, 18, 0.3))',
   },
   title: {
-    textAlign: 'center',
-    marginBottom: '5px',
-    color: '#1a1a2e'
+    margin: 0,
+    fontSize: '20px',
+    fontWeight: 700,
+    color: '#ffffff',
+    letterSpacing: '4px',
+    textTransform: 'uppercase',
   },
   subtitle: {
-    textAlign: 'center',
-    color: '#888',
-    marginBottom: '25px'
+    margin: '8px 0 0',
+    fontSize: '11px',
+    color: '#f39c12',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    opacity: 0.8,
   },
-  field: {
-    marginBottom: '15px',
+  form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '5px'
+    gap: '4px',
   },
   input: {
-    padding: '10px',
-    borderRadius: '6px',
-    border: '1px solid #ddd',
-    fontSize: '14px'
+    width: '100%',
+    padding: '14px 0',
+    marginBottom: '20px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderBottom: '1px solid #333',
+    color: '#fff',
+    fontSize: '14px',
+    outline: 'none',
+    transition: 'all 0.3s ease',
+    boxSizing: 'border-box',
   },
   button: {
     width: '100%',
-    padding: '12px',
-    backgroundColor: '#1a1a2e',
-    color: 'white',
+    padding: '14px',
+    backgroundColor: '#f39c12',
+    color: '#000',
     border: 'none',
-    borderRadius: '6px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    marginTop: '10px'
+    borderRadius: '2px',
+    fontSize: '13px',
+    fontWeight: 700,
+    letterSpacing: '2px',
+    marginTop: '20px',
+    textTransform: 'uppercase',
+    transition: 'transform 0.1s active',
   },
   error: {
-    color: 'red',
-    textAlign: 'center',
-    marginBottom: '10px'
+    color: '#ff4d4d',
+    fontSize: '11px',
+    textAlign: 'left',
+    marginBottom: '24px',
+    padding: '12px',
+    backgroundColor: 'rgba(255, 77, 77, 0.05)',
+    borderLeft: '3px solid #ff4d4d',
+    letterSpacing: '1px',
+    fontWeight: 500,
   }
-}
+};
 
-export default Login
+export default Login;
