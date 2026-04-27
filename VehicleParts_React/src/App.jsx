@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './pages/Login'
-import AdminDashboard from './pages/admin/Dashboard'
+import Login from './pages/login'
+import AdminDashboard from './pages/admin/dashboard'
 import VendorPage from './pages/admin/Vendors'
 import StaffPage from './pages/admin/Staff'
 import ProtectedRoute from './components/ProtectedRoute'
+import Customers from './pages/staff/Customers'
+import StaffDashboard from './pages/staff/dashboard'
 
 function App() {
   return (
@@ -23,6 +25,16 @@ function App() {
         <Route path="/admin/staff" element={
           <ProtectedRoute allowedRole="Admin">
             <StaffPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/staff/dashboard" element={
+          <ProtectedRoute allowedRole="Staff">
+            <StaffDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/staff/customers" element={
+          <ProtectedRoute allowedRole="Staff">
+            <Customers />
           </ProtectedRoute>
         } />
       </Routes>
