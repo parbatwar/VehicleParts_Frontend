@@ -22,12 +22,10 @@ function Login() {
       const { data } = await api.post('/auth/login', form);
       const { token, role, fullName } = data;
 
-      // Persistence
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       localStorage.setItem('fullName', fullName);
 
-      // Role-based Routing
       const routes = {
         Admin: '/admin/dashboard',
         Staff: '/staff/dashboard',
@@ -45,9 +43,24 @@ function Login() {
 
   return (
     <div style={styles.container}>
+      {/* INJECTED CSS TO FIX AUTOFILL WHITE FLASH */}
+      <style>{`
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+          -webkit-text-fill-color: #ffffff !important;
+          -webkit-box-shadow: 0 0 0px 1000px #141414 inset !important;
+          transition: background-color 5000s ease-in-out 0s;
+        }
+        input:focus {
+          border-bottom: 1px solid #f39c12 !important;
+        }
+      `}</style>
+
       <div style={styles.card}>
         <header style={styles.header}>
-          <div style={styles.icon}>⚙️</div>
+          {/* REPLACED EMOJI WITH LOGO BOX TO MATCH THEME */}
+          <div style={styles.logoBox}>VP</div>
           <h1 style={styles.title}>VEHICLE PARTS</h1>
           <p style={styles.subtitle}>garage access system</p>
         </header>
@@ -88,12 +101,24 @@ function Login() {
                 opacity: loading ? 0.6 : 1,
                 cursor: loading ? 'not-allowed' : 'pointer'
             }} 
+            className="login-btn"
             disabled={loading}
           >
             {loading ? 'IGNITING...' : 'START ENGINE'}
           </button>
         </form>
       </div>
+
+      <style>{`
+        .login-btn:hover {
+            background-color: #e68a00 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        .login-btn:active {
+            transform: translateY(0);
+        }
+      `}</style>
     </div>
   );
 }
@@ -122,10 +147,15 @@ const styles = {
     textAlign: 'center',
     marginBottom: '40px',
   },
-  icon: {
-    fontSize: '40px',
-    marginBottom: '12px',
-    filter: 'drop-shadow(0 0 10px rgba(243, 156, 18, 0.3))',
+  logoBox: {
+    display: 'inline-block',
+    backgroundColor: '#f39c12',
+    color: '#000',
+    fontSize: '18px',
+    fontWeight: '900',
+    padding: '6px 10px',
+    borderRadius: '2px',
+    marginBottom: '15px',
   },
   title: {
     margin: 0,
@@ -173,7 +203,7 @@ const styles = {
     letterSpacing: '2px',
     marginTop: '20px',
     textTransform: 'uppercase',
-    transition: 'transform 0.1s active',
+    transition: 'all 0.2s ease',
   },
   error: {
     color: '#ff4d4d',
