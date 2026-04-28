@@ -9,7 +9,6 @@ function AdminDashboard() {
       <AdminNavbar />
       <div style={styles.container}>
         <div style={styles.header}>
-          <div style={styles.icon}>🔧</div>
           <div>
             <h2 style={styles.title}>Welcome, {fullName}</h2>
             <p style={styles.subtitle}>garage management system</p>
@@ -17,13 +16,13 @@ function AdminDashboard() {
         </div>
 
         <div style={styles.cards}>
-          <Link to="/admin/vendors" style={styles.card}>
+          <Link to="/admin/vendors" style={styles.card} className="dashboard-card">
             <div style={styles.cardIcon}>🏭</div>
             <h3 style={styles.cardTitle}>Vendors</h3>
             <p style={styles.cardText}>Manage suppliers & parts</p>
             <div style={styles.cardFooter}>ACCESS →</div>
           </Link>
-          <Link to="/admin/staff" style={styles.card}>
+          <Link to="/admin/staff" style={styles.card} className="dashboard-card">
             <div style={styles.cardIcon}>👷</div>
             <h3 style={styles.cardTitle}>Staff</h3>
             <p style={styles.cardText}>Manage team accounts</p>
@@ -31,6 +30,15 @@ function AdminDashboard() {
           </Link>
         </div>
       </div>
+      <style>{`
+        .dashboard-card {
+          transition: all 0.2s ease !important;
+        }
+        .dashboard-card:hover {
+          transform: translateY(-2px) !important;
+          border-color: #f39c12 !important;
+        }
+      `}</style>
     </div>
   )
 }
@@ -43,7 +51,10 @@ const styles = {
     backgroundSize: '20px 20px',
   },
   container: {
-    padding: '30px 40px',
+    padding: '40px max(5vw, 20px)',
+    maxWidth: '1400px',
+    margin: '0 auto',
+    boxSizing: 'border-box',
   },
   header: {
     display: 'flex',
@@ -59,16 +70,17 @@ const styles = {
   title: {
     margin: 0,
     fontSize: '24px',
-    fontWeight: 500,
-    color: '#e0e0e0',
+    fontWeight: 600,
+    color: '#fff',
     letterSpacing: '1px',
   },
   subtitle: {
-    margin: '5px 0 0',
+    margin: '8px 0 0',
     fontSize: '11px',
     color: '#f39c12',
-    letterSpacing: '2px',
+    letterSpacing: '3px',
     textTransform: 'uppercase',
+    opacity: 0.8,
   },
   cards: {
     display: 'flex',
@@ -82,12 +94,7 @@ const styles = {
     border: '1px solid #2a2a2a',
     textDecoration: 'none',
     width: '240px',
-    transition: 'all 0.2s ease',
     cursor: 'pointer',
-    ':hover': {
-      transform: 'translateY(-2px)',
-      borderColor: '#f39c12',
-    }
   },
   cardIcon: {
     fontSize: '40px',

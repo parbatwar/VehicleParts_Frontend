@@ -1,9 +1,9 @@
 export const styles = {
   wrapper: {
     minHeight: '100vh',
-    backgroundColor: '#0a0a0a',
+    backgroundColor: '#0f0f0f',
     backgroundImage: 'radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px)',
-    backgroundSize: '32px 32px',
+    backgroundSize: '20px 20px',
     color: '#e0e0e0',
   },
   container: {
