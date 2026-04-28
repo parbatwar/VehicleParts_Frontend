@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleParts.Presentation", "VehicleParts.Presentation\VehicleParts.Presentation.csproj", "{89C1D1BB-8465-490A-9796-804483622C87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleParts.Application", "VehicleParts.Application\VehicleParts.Application.csproj", "{0A44C1AF-45E2-41C3-BAC5-CC00762E5341}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VehicleParts.Infrastructure", "VehicleParts.Infrastructure\VehicleParts.Infrastructure.csproj", "{3968C491-3B57-44E9-B756-CD2DBB70C4F3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{89C1D1BB-8465-490A-9796-804483622C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89C1D1BB-8465-490A-9796-804483622C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89C1D1BB-8465-490A-9796-804483622C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89C1D1BB-8465-490A-9796-804483622C87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A44C1AF-45E2-41C3-BAC5-CC00762E5341}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A44C1AF-45E2-41C3-BAC5-CC00762E5341}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A44C1AF-45E2-41C3-BAC5-CC00762E5341}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A44C1AF-45E2-41C3-BAC5-CC00762E5341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3968C491-3B57-44E9-B756-CD2DBB70C4F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3968C491-3B57-44E9-B756-CD2DBB70C4F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3968C491-3B57-44E9-B756-CD2DBB70C4F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3968C491-3B57-44E9-B756-CD2DBB70C4F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

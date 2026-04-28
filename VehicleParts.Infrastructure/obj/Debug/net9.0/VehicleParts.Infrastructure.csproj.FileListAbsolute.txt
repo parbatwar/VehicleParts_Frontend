@@ -1,0 +1,17 @@
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.AssemblyInfoInputs.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.AssemblyInfo.cs
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.csproj.AssemblyReference.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Infrastructure.deps.json
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Infrastructure.runtimeconfig.json
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Infrastructure.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Infrastructure.pdb
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Application.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/bin/Debug/net9.0/VehicleParts.Application.pdb
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleP.014950FD.Up2Date
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/refint/VehicleParts.Infrastructure.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.pdb
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/VehicleParts.Infrastructure.genruntimeconfig.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Infrastructure/obj/Debug/net9.0/ref/VehicleParts.Infrastructure.dll

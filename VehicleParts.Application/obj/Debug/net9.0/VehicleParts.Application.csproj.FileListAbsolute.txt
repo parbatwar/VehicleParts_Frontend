@@ -1,0 +1,11 @@
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/bin/Debug/net9.0/VehicleParts.Application.deps.json
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/bin/Debug/net9.0/VehicleParts.Application.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/bin/Debug/net9.0/VehicleParts.Application.pdb
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.AssemblyInfoInputs.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.AssemblyInfo.cs
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.csproj.CoreCompileInputs.cache
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/refint/VehicleParts.Application.dll
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/VehicleParts.Application.pdb
+/Users/utsav/Desktop/VehicleParts/VehicleParts.Application/obj/Debug/net9.0/ref/VehicleParts.Application.dll
