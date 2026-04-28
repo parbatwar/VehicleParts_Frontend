@@ -1,0 +1,180 @@
+/* Layout */
+.dashboard-container {
+  min-height: 100vh;
+  color: #fff;
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative;
+}
+
+/* Video Background */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1;
+}
+
+/* Navbar */
+.dashboard-navbar {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+.dashboard-logo {
+  color: #f39c12;
+  font-size: 14px;
+  letter-spacing: 3px;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-user {
+  color: #ccc;
+  font-size: 14px;
+}
+
+.dashboard-logout-btn {
+  padding: 8px 20px;
+  background: rgba(255, 77, 77, 0.15);
+  color: #ff4d4d;
+  border: 1px solid rgba(255, 77, 77, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.dashboard-logout-btn:hover {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+/* Main Content */
+.dashboard-main {
+  position: relative;
+  z-index: 10;
+  padding: 60px 40px;
+}
+
+.dashboard-header {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.dashboard-welcome {
+  color: #fff;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+}
+
+.dashboard-welcome span {
+  color: #f39c12;
+}
+
+.dashboard-subtitle {
+  color: #888;
+  font-size: 15px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Feature Cards */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 32px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.dashboard-card:hover {
+  border-color: rgba(243, 156, 18, 0.5);
+  background: rgba(243, 156, 18, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(243, 156, 18, 0.15);
+}
+
+.card-icon {
+  font-size: 40px;
+  margin-bottom: 18px;
+}
+
+.card-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+  letter-spacing: 1px;
+}
+
+.card-desc {
+  color: #888;
+  font-size: 13px;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.card-btn {
+  padding: 10px 20px;
+  background: rgba(243, 156, 18, 0.15);
+  color: #f39c12;
+  border: 1px solid rgba(243, 156, 18, 0.4);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.card-btn:hover {
+  background: #f39c12;
+  color: #000;
+}

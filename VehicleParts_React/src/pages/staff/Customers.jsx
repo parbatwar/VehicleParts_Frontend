@@ -103,22 +103,18 @@ function Customers() {
   return (
     <div className="customers-container">
 
-      {/* Sidebar */}
-      <div className="sidebar">
-        <h2 className="sidebar-logo">⚙️ VEHICLE PARTS</h2>
-        <nav>
-          <button className="nav-btn" onClick={() => navigate('/staff/dashboard')}>
-            🏠 Dashboard
+      {/* Top Navbar */}
+      <div className="customers-navbar">
+        <div className="navbar-left">
+          <button className="back-btn" onClick={() => navigate('/staff/dashboard')}>
+            ← Back
           </button>
-          <button className="nav-btn active">
-            👥 Customers
-          </button>
-        </nav>
-        <div className="user-info">
-          <p className="user-label">LOGGED IN AS</p>
-          <p className="user-name">{fullName}</p>
+          <h2 className="navbar-logo">⚙️ VEHICLE PARTS</h2>
         </div>
-        <button className="logout-btn" onClick={handleLogout}>LOGOUT</button>
+        <div className="navbar-right">
+          <span className="navbar-user">👤 {fullName}</span>
+          <button className="navbar-logout-btn" onClick={handleLogout}>LOGOUT</button>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -130,7 +126,7 @@ function Customers() {
           </button>
         </div>
 
-        {/* Search Bar - Always Visible */}
+        {/* Search Bar */}
         <div className="search-box">
           <input
             className="search-input"
@@ -145,7 +141,7 @@ function Customers() {
           )}
         </div>
 
-        {/* Register Form - Toggle */}
+        {/* Register Form */}
         {showForm && (
           <div className="form-container">
             <h3 className="section-title">NEW CUSTOMER REGISTRATION</h3>

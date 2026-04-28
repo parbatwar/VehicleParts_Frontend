@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import './StaffDashboard.css'
 
 function StaffDashboard() {
   const navigate = useNavigate()
@@ -9,33 +10,75 @@ function StaffDashboard() {
     navigate('/')
   }
 
+  const features = [
+    {
+      icon: '👥',
+      title: 'Customer Management',
+      desc: 'Register new customers with vehicle details, view customer profiles, and manage customer information.',
+      btn: 'Manage Customers',
+      path: '/staff/customers'
+    },
+    {
+      icon: '🔍',
+      title: 'Search Customers',
+      desc: 'Search customers by name, phone number, vehicle plate number, or customer ID instantly.',
+      btn: 'Search Now',
+      path: '/staff/customers'
+    },
+    {
+      icon: '📋',
+      title: 'Customer History',
+      desc: 'View complete customer purchase history, vehicle information, and service records.',
+      btn: 'View History',
+      path: '/staff/customers'
+    }
+  ]
+
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <h2 style={styles.logo}>⚙️ VEHICLE PARTS</h2>
-        <nav>
-          <button style={styles.navBtn} onClick={() => navigate('/staff/customers')}>
-            👥 Customers
-          </button>
-        </nav>
-        <button style={styles.logoutBtn} onClick={handleLogout}>LOGOUT</button>
+    <div className="dashboard-container">
+
+      {/* Video Background */}
+      <div className="video-background">
+        <video autoPlay muted loop playsInline>
+          <source src="/background.mp4" type="video/mp4" />
+        </video>
       </div>
-      <div style={styles.main}>
-        <h1 style={styles.welcome}>Welcome, {fullName}</h1>
-        <p style={{ color: '#999' }}>Select an option from the sidebar</p>
+      <div className="video-overlay" />
+
+      {/* Top Navbar */}
+      <div className="dashboard-navbar">
+        <h2 className="dashboard-logo">⚙️ VEHICLE PARTS</h2>
+        <div className="navbar-right">
+          <span className="navbar-user">👤 {fullName}</span>
+          <button className="dashboard-logout-btn" onClick={handleLogout}>LOGOUT</button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="dashboard-main">
+        <div className="dashboard-header">
+          <h1 className="dashboard-welcome">
+            Welcome, <span>{fullName}</span>
+          </h1>
+          <p className="dashboard-subtitle">
+            What would you like to manage today?
+          </p>
+        </div>
+
+        {/* Feature Cards */}
+        <div className="dashboard-cards">
+          {features.map((f, i) => (
+            <div key={i} className="dashboard-card" onClick={() => navigate(f.path)}>
+              <div className="card-icon">{f.icon}</div>
+              <h3 className="card-title">{f.title}</h3>
+              <p className="card-desc">{f.desc}</p>
+              <button className="card-btn">{f.btn} →</button>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
-}
-
-const styles = {
-  container: { display: 'flex', minHeight: '100vh', backgroundColor: '#0a0a0a', color: '#fff' },
-  sidebar: { width: '240px', backgroundColor: '#141414', borderRight: '1px solid #222', padding: '30px 20px', display: 'flex', flexDirection: 'column' },
-  logo: { color: '#f39c12', fontSize: '14px', letterSpacing: '2px', marginBottom: '40px' },
-  navBtn: { width: '100%', padding: '12px', backgroundColor: 'transparent', color: '#fff', border: '1px solid #333', borderRadius: '4px', cursor: 'pointer', textAlign: 'left', marginBottom: '10px', fontSize: '14px' },
-  logoutBtn: { marginTop: 'auto', padding: '12px', backgroundColor: '#ff4d4d', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, letterSpacing: '2px' },
-  main: { flex: 1, padding: '40px' },
-  welcome: { color: '#f39c12', letterSpacing: '2px' }
 }
 
 export default StaffDashboard
