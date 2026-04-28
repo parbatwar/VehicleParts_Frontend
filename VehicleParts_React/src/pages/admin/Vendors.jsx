@@ -109,15 +109,15 @@ function VendorPage() {
           <table style={styles.table}>
             <thead>
               <tr>
-                {['ID', 'Vendor', 'Contact', 'Email', 'Location', 'Actions'].map(h => 
+                {['S.N.', 'Vendor', 'Contact', 'Email', 'Location', 'Actions'].map(h => 
                   <th key={h} style={styles.th}>{h}</th>
                 )}
               </tr>
             </thead>
             <tbody>
-              {vendors.map(v => (
+              {vendors.map((v, index) => (
                 <tr key={v.id} style={styles.tr} className="v-row">
-                  <td style={styles.td}>{v.id}</td>
+                  <td style={styles.td}>{index + 1}</td>
                   <td style={{...styles.td, color: '#f39c12'}}>{v.name}</td>
                   <td style={styles.td}>{v.phone || '—'}</td>
                   <td style={styles.td}>{v.email || '—'}</td>
