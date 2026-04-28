@@ -43,20 +43,15 @@ function Login() {
 
   return (
     <div style={styles.container}>
-      {/* INJECTED CSS TO FIX AUTOFILL WHITE FLASH */}
       <style>{`
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover, 
-        input:-webkit-autofill:focus {
-          -webkit-text-fill-color: #ffffff !important;
-          -webkit-box-shadow: 0 0 0px 1000px #141414 inset !important;
-          transition: background-color 5000s ease-in-out 0s;
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.7);
+          letter-spacing: 1px;
         }
         input:focus {
           border-bottom: 1px solid #f39c12 !important;
         }
       `}</style>
-
       <div style={styles.card}>
         <header style={styles.header}>
           {/* REPLACED EMOJI WITH LOGO BOX TO MATCH THEME */}
@@ -129,19 +124,23 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     minHeight: '100vh',
-    backgroundColor: '#0a0a0a',
-    backgroundImage: 'radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px)',
-    backgroundSize: '24px 24px',
+    backgroundImage: 'url(/login_background.jpeg)',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
     fontFamily: 'system-ui, -apple-system, sans-serif',
+    position: 'relative',
   },
   card: {
-    backgroundColor: '#141414',
+    backgroundColor: 'rgba(10, 10, 10, 0.25)',
+    backdropFilter: 'blur(4px)',
+    WebkitBackdropFilter: 'blur(4px)',
     padding: '48px 40px',
-    borderRadius: '4px',
-    border: '1px solid #222',
+    borderRadius: '12px',
+    border: '1px solid rgba(243, 156, 18, 0.3)',
     width: '100%',
     maxWidth: '380px',
-    boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+    boxShadow: '0 0 30px rgba(243, 156, 18, 0.3), 0 0 60px rgba(255, 77, 0, 0.2), 0 0 100px rgba(255, 77, 0, 0.1), inset 0 0 30px rgba(243, 156, 18, 0.05)',
   },
   header: {
     textAlign: 'center',
@@ -178,18 +177,22 @@ const styles = {
     flexDirection: 'column',
     gap: '4px',
   },
+  inputGroup: {
+    width: '100%',
+  },
   input: {
     width: '100%',
     padding: '14px 0',
     marginBottom: '20px',
     backgroundColor: 'transparent',
     border: 'none',
-    borderBottom: '1px solid #333',
-    color: '#fff',
+    borderBottom: '1px solid rgba(243, 156, 18, 0.5)',
+    color: '#ffffff',
     fontSize: '14px',
     outline: 'none',
     transition: 'all 0.3s ease',
     boxSizing: 'border-box',
+    caretColor: '#f39c12',
   },
   button: {
     width: '100%',
@@ -203,7 +206,6 @@ const styles = {
     letterSpacing: '2px',
     marginTop: '20px',
     textTransform: 'uppercase',
-    transition: 'all 0.2s ease',
   },
   error: {
     color: '#ff4d4d',
