@@ -1,0 +1,78 @@
+.history-wrapper {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+.history-title {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #ecf0f1;
+    padding-bottom: 10px;
+}
+
+.history-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    font-size: 20px;
+    color: #34495e;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+/* Table Styling */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th, 
+.history-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.history-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+}
+
+.history-table tr:hover {
+    background-color: #fcfcfc;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-completed { background-color: #d4edda; color: #155724; }
+.status-cancelled { background-color: #f8d7da; color: #721c24; }
+.status-paid { background-color: #cce5ff; color: #004085; }
+.status-unpaid { background-color: #f8d7da; color: #721c24; }
+.status-default { background-color: #e2e3e5; color: #383d41; }
+
+.empty-state {
+    text-align: center;
+    padding: 30px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px dashed #ced4da;
+}
