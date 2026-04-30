@@ -1,0 +1,14 @@
+/* Dashboard Wrapper */
+.dashboard-wrapper {
+  min-height: 100vh;
+  background-color: #0f0f0f;
+  background-image: radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.dashboard-container {
+  padding: 40px max(5vw, 20px);
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+}

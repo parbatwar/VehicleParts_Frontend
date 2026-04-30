@@ -11,6 +11,9 @@ import Vehicles from './pages/customer/Vehicles';
 import Interactions from './pages/customer/Interactions';
 import History from './pages/customer/History';
 import Register from './pages/customer/Register'
+import CustomerDashboard from './pages/customer/dashboard'; 
+import About from './pages/customer/About';
+import Services from './pages/customer/Services';
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
             <StaffPage />
           </ProtectedRoute>
         } />
+
+
+        {/* Staff Protected Routes */}
         <Route path="/staff/dashboard" element={
           <ProtectedRoute allowedRole="Staff">
             <StaffDashboard />
@@ -46,9 +52,22 @@ function App() {
         } />
 
 
-        
-
         {/* Customer Protected Routes */}
+        <Route path="/customer/dashboard" element={
+          <ProtectedRoute allowedRole="Customer">
+            <CustomerDashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/customer/services" element={
+        <ProtectedRoute allowedRole="Customer">
+            <Services />
+        </ProtectedRoute>
+        } />
+        <Route path="/customer/about" element={
+        <ProtectedRoute allowedRole="Customer">
+            <About />
+        </ProtectedRoute>
+        } />
         <Route path="/customer/profile" element={
           <ProtectedRoute allowedRole="Customer">
             <Profile />
