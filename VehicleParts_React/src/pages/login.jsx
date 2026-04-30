@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../api/axios';
+import api from '../api/axios'; 
 
 function Login() {
   const navigate = useNavigate();
@@ -42,81 +42,125 @@ function Login() {
   };
 
   return (
-    <div style={styles.container}>
-      <style>{`
-        input::placeholder {
-          color: rgba(255, 255, 255, 0.7);
-          letter-spacing: 1px;
-        }
-        input:focus {
-          border-bottom: 1px solid #f39c12 !important;
-        }
-      `}</style>
-      <div style={styles.card}>
-        <header style={styles.header}>
-          <div style={styles.logoBox}>VP</div>
-          <h1 style={styles.title}>VEHICLE PARTS</h1>
-          <p style={styles.subtitle}>garage access system</p>
-        </header>
-
-        {error && <div style={styles.error}>{error}</div>}
-
-        <form onSubmit={handleLogin} style={styles.form}>
-          <div style={styles.inputGroup}>
-            <input
-              type="email"
-              name="email"
-              placeholder="EMAIL ADDRESS"
-              value={form.email}
-              onChange={handleChange}
-              style={styles.input}
-              disabled={loading}
-              required
+    <div style={styles.wrapper}>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <div style={styles.header}>
+            <img 
+              src="/GearUpCropped.png" 
+              alt="GearUp Logo" 
+              style={styles.logo}
             />
-          </div>
-          
-          <div style={styles.inputGroup}>
-            <input
-              type="password"
-              name="password"
-              placeholder="PASSWORD"
-              value={form.password}
-              onChange={handleChange}
-              style={styles.input}
-              disabled={loading}
-              required
-            />
+            <div style={styles.divider}></div>
           </div>
 
-          <button 
-            type="submit" 
-            style={{
+          {error && (
+            <div style={styles.error}>
+              <span>{error}</span>
+              <button onClick={() => setError('')} style={styles.errorClose}>×</button>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} style={styles.form}>
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>EMAIL ADDRESS</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                style={styles.input}
+                disabled={loading}
+                required
+              />
+            </div>
+            
+            <div style={styles.inputGroup}>
+              <label style={styles.label}>PASSWORD</label>
+              <input
+                type="password"
+                name="password"
+
+                value={form.password}
+                onChange={handleChange}
+                style={styles.input}
+                disabled={loading}
+                required
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              style={{
                 ...styles.button, 
-                opacity: loading ? 0.6 : 1,
+                opacity: loading ? 0.7 : 1,
                 cursor: loading ? 'not-allowed' : 'pointer'
-            }} 
-            className="login-btn"
-            disabled={loading}
-          >
-            {loading ? 'IGNITING...' : 'START ENGINE'}
-          </button>
-        </form>
+              }} 
+              className="login-btn"
+              disabled={loading}
+            >
+              {loading ? 'AUTHENTICATING...' : 'START ENGINE'}
+            </button>
+          </form>
 
-        <div style={styles.registerLinkContainer}>
-          <Link to="/customer/register" style={styles.registerLink}>
-            REGISTER AS CUSTOMER
-          </Link>
+          <div style={styles.registerContainer}>
+            <Link to="/customer/register" style={styles.registerLink} className="register-link">
+              REGISTER AS CUSTOMER →
+            </Link>
+          </div>
         </div>
       </div>
 
       <style>{`
-        .login-btn:hover {
-            background-color: #e68a00 !important;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        .login-btn {
+          transition: all 0.2s ease !important;
+          position: relative;
+          overflow: hidden;
         }
-        .login-btn:active {
+        
+        .login-btn:hover:not(:disabled) {
+          background-color: #e68a00 !important;
+          transform: translateY(-1px) !important;
+          box-shadow: 0 5px 20px rgba(243, 156, 18, 0.3) !important;
+        }
+        
+        .login-btn:active:not(:disabled) {
+          transform: translateY(0) !important;
+        }
+        
+        .register-link {
+          transition: all 0.2s ease !important;
+        }
+        
+        .register-link:hover {
+          color: #fff !important;
+          gap: 8px !important;
+        }
+        
+        input:-webkit-autofill {
+          -webkit-text-fill-color: #fff !important;
+          -webkit-box-shadow: 0 0 0px 1000px #0a0a0a inset !important;
+        }
+        
+        input:focus {
+          border-color: #f39c12 !important;
+          outline: none;
+          background-color: #0a0a0a !important;
+        }
+        
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
             transform: translateY(0);
+          }
+        }
+        
+        .login-card-animate {
+          animation: slideUp 0.4s ease-out;
         }
       `}</style>
     </div>
@@ -124,116 +168,125 @@ function Login() {
 }
 
 const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+  wrapper: {
     minHeight: '100vh',
-    backgroundImage: 'url(/login_background.jpeg)',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    fontFamily: 'system-ui, -apple-system, sans-serif',
+    backgroundColor: '#0f0f0f',
+    backgroundImage: 'radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px)',
+    backgroundSize: '20px 20px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'relative',
   },
-  card: {
-    backgroundColor: 'rgba(10, 10, 10, 0.25)',
-    backdropFilter: 'blur(4px)',
-    WebkitBackdropFilter: 'blur(4px)',
-    padding: '48px 40px',
-    borderRadius: '12px',
-    border: '1px solid rgba(243, 156, 18, 0.3)',
+  container: {
+    padding: '40px',
     width: '100%',
-    maxWidth: '380px',
-    boxShadow: '0 0 30px rgba(243, 156, 18, 0.3), 0 0 60px rgba(255, 77, 0, 0.2), 0 0 100px rgba(255, 77, 0, 0.1), inset 0 0 30px rgba(243, 156, 18, 0.05)',
+    maxWidth: '480px',
+    margin: '0 auto',
+    boxSizing: 'border-box',
+  },
+  card: {
+    backgroundColor: '#111111',
+    border: '1px solid #222222',
+    borderRadius: '8px',
+    padding: '48px 40px',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+    animation: 'slideUp 0.4s ease-out',
   },
   header: {
     textAlign: 'center',
     marginBottom: '40px',
   },
-  logoBox: {
-    display: 'inline-block',
-    backgroundColor: '#f39c12',
-    color: '#000',
-    fontSize: '18px',
-    fontWeight: '900',
-    padding: '6px 10px',
-    borderRadius: '2px',
-    marginBottom: '15px',
+  logo: {
+    width: '200px',
   },
-  title: {
-    margin: 0,
+  divider: {
+    height: '1px',
+    background: 'linear-gradient(90deg, transparent, #222222, transparent)',
+    marginTop: '24px',
+  },
+  error: {
+    backgroundColor: 'rgba(255, 107, 107, 0.05)',
+    border: '1px solid rgba(255, 107, 107, 0.2)',
+    borderRadius: '4px',
+    color: '#ff6b6b',
+    fontSize: '12px',
+    padding: '12px 16px',
+    marginBottom: '28px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    letterSpacing: '0.5px',
+  },
+  errorClose: {
+    background: 'none',
+    border: 'none',
+    color: '#ff6b6b',
+    cursor: 'pointer',
     fontSize: '20px',
-    fontWeight: 700,
-    color: '#ffffff',
-    letterSpacing: '4px',
-    textTransform: 'uppercase',
-  },
-  subtitle: {
-    margin: '8px 0 0',
-    fontSize: '11px',
-    color: '#f39c12',
-    letterSpacing: '2px',
-    textTransform: 'uppercase',
-    opacity: 0.8,
+    padding: '0',
+    width: '24px',
+    height: '24px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '4px',
+    gap: '20px',
   },
   inputGroup: {
-    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
   },
-  input: {
-    width: '100%',
-    padding: '14px 0',
-    marginBottom: '20px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    borderBottom: '1px solid rgba(243, 156, 18, 0.5)',
-    color: '#ffffff',
-    fontSize: '14px',
-    outline: 'none',
-    transition: 'all 0.3s ease',
-    boxSizing: 'border-box',
-    caretColor: '#f39c12',
-  },
-  button: {
-    width: '100%',
-    padding: '14px',
-    backgroundColor: '#f39c12',
-    color: '#000',
-    border: 'none',
-    borderRadius: '2px',
-    fontSize: '13px',
-    fontWeight: 700,
-    letterSpacing: '2px',
-    marginTop: '20px',
+  label: {
+    fontSize: '10px',
+    color: '#888888',
+    letterSpacing: '1.5px',
+    fontWeight: 600,
     textTransform: 'uppercase',
   },
-  error: {
-    color: '#ff4d4d',
-    fontSize: '11px',
-    textAlign: 'left',
-    marginBottom: '24px',
-    padding: '12px',
-    backgroundColor: 'rgba(255, 77, 77, 0.05)',
-    borderLeft: '3px solid #ff4d4d',
-    letterSpacing: '1px',
-    fontWeight: 500,
+  input: {
+    padding: '12px 14px',
+    backgroundColor: '#0a0a0a',
+    border: '1px solid #2a2a2a',
+    borderRadius: '4px',
+    color: '#ffffff',
+    fontSize: '14px',
+    transition: 'all 0.2s ease',
+    fontFamily: 'monospace',
   },
-  registerLinkContainer: {
-    marginTop: '24px',
+  button: {
+    backgroundColor: '#f39c12',
+    color: '#000000',
+    border: 'none',
+    padding: '14px 24px',
+    borderRadius: '4px',
+    fontSize: '12px',
+    fontWeight: 700,
+    letterSpacing: '2px',
+    marginTop: '12px',
+    textTransform: 'uppercase',
+    transition: 'all 0.2s ease',
+  },
+  registerContainer: {
+    marginTop: '32px',
+    paddingTop: '24px',
+    borderTop: '1px solid #1a1a1a',
     textAlign: 'center',
   },
   registerLink: {
     color: '#f39c12',
-    fontSize: '12px',
+    fontSize: '11px',
     textDecoration: 'none',
     letterSpacing: '1.5px',
     fontWeight: 600,
-    transition: 'opacity 0.2s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    transition: 'all 0.2s ease',
   },
 };
 
