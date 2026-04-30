@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 
 function Login() {
@@ -54,7 +54,6 @@ function Login() {
       `}</style>
       <div style={styles.card}>
         <header style={styles.header}>
-          {/* REPLACED EMOJI WITH LOGO BOX TO MATCH THEME */}
           <div style={styles.logoBox}>VP</div>
           <h1 style={styles.title}>VEHICLE PARTS</h1>
           <p style={styles.subtitle}>garage access system</p>
@@ -102,6 +101,12 @@ function Login() {
             {loading ? 'IGNITING...' : 'START ENGINE'}
           </button>
         </form>
+
+        <div style={styles.registerLinkContainer}>
+          <Link to="/customer/register" style={styles.registerLink}>
+            REGISTER AS CUSTOMER
+          </Link>
+        </div>
       </div>
 
       <style>{`
@@ -217,7 +222,19 @@ const styles = {
     borderLeft: '3px solid #ff4d4d',
     letterSpacing: '1px',
     fontWeight: 500,
-  }
+  },
+  registerLinkContainer: {
+    marginTop: '24px',
+    textAlign: 'center',
+  },
+  registerLink: {
+    color: '#f39c12',
+    fontSize: '12px',
+    textDecoration: 'none',
+    letterSpacing: '1.5px',
+    fontWeight: 600,
+    transition: 'opacity 0.2s ease',
+  },
 };
 
 export default Login;
