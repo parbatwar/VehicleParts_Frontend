@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import api from '../../api/axios'; 
-import './Register.css'; 
+import api from '../../api/axios';
+import './Register.css';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -18,121 +18,289 @@ const Register = () => {
         confirmPassword: ''
     });
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); 
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
+        if (error) setError('');
+    };
+
+    const validateForm = () => {
+        if (!formData.firstName.trim()) return "FIRST NAME IS REQUIRED";
+        if (!formData.lastName.trim()) return "LAST NAME IS REQUIRED";
+        if (!formData.email.trim()) return "EMAIL ADDRESS IS REQUIRED";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) return "INVALID EMAIL FORMAT";
+        if (!formData.phone.trim()) return "PHONE NUMBER IS REQUIRED";
+        if (formData.phone.length < 10) return "PHONE NUMBER MUST BE AT LEAST 10 DIGITS";
+        if (!formData.brand.trim()) return "VEHICLE BRAND IS REQUIRED";
+        if (!formData.model.trim()) return "VEHICLE MODEL IS REQUIRED";
+        if (!formData.year) return "VEHICLE YEAR IS REQUIRED";
+        const year = parseInt(formData.year);
+        const currentYear = new Date().getFullYear();
+        if (year < 1900 || year > currentYear + 1) return `VEHICLE YEAR MUST BE BETWEEN 1900 AND ${currentYear + 1}`;
+        if (!formData.plateNumber.trim()) return "PLATE NUMBER IS REQUIRED";
+        if (!formData.password) return "PASSWORD IS REQUIRED";
+        if (formData.password.length < 6) return "PASSWORD MUST BE AT LEAST 6 CHARACTERS";
+        if (formData.password !== formData.confirmPassword) return "PASSWORDS DO NOT MATCH";
+        return null;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
-        if (formData.password !== formData.confirmPassword) {
-            return setError("Passwords do not match.");
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
+            return;
         }
-
+        
         setLoading(true);
+        setError('');
+        
         try {
             const payload = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
-                email: formData.email,
-                phone: formData.phone,
-                brand: formData.brand,
-                model: formData.model,
+                firstName: formData.firstName.trim(),
+                lastName: formData.lastName.trim(),
+                email: formData.email.trim(),
+                phone: formData.phone.trim(),
+                brand: formData.brand.trim(),
+                model: formData.model.trim(),
                 year: parseInt(formData.year, 10),
-                plateNumber: formData.plateNumber,
+                plateNumber: formData.plateNumber.trim().toUpperCase(),
                 password: formData.password,
             };
 
-            const candidateEndpoints = [
-                '/auth/customer/register',
-                '/auth/register/customer',
-                '/auth/register',
-            ];
-
-            let lastError = null;
-            for (const endpoint of candidateEndpoints) {
-                try {
-                    await api.post(endpoint, payload);
-                    lastError = null;
-                    break;
-                } catch (endpointErr) {
-                    lastError = endpointErr;
-                    const status = endpointErr?.response?.status;
-                    if (status === 401 || status === 403) {
-                        break;
-                    }
-                    if (status !== 404 && status !== 405) {
-                        break;
-                    }
-                }
-            }
-
-            if (lastError) {
-                throw lastError;
+            const response = await api.post('/customer/self-register', payload);
+            
+            if (response.data) {
+                alert("REGISTRATION SUCCESSFUL! PLEASE LOG IN.");
+                navigate('/');
             }
             
-            alert("Registration successful! Please log in.");
-            navigate('/');
         } catch (err) {
-            if (err.response?.status === 401 || err.response?.status === 403) {
-                setError('Registration endpoint is protected on backend. Ask backend to allow anonymous customer signup.');
-                return;
+            // SHOW THE ACTUAL ERROR MESSAGE
+            let errorMessage = 'REGISTRATION FAILED. PLEASE TRY AGAIN';
+            
+            if (err.response) {
+                // Server responded with an error
+                const status = err.response.status;
+                const serverMessage = err.response.data?.message || err.response.data?.error;
+                
+                // Show specific error based on status
+                switch (status) {
+                    case 400:
+                        errorMessage = serverMessage || 'BAD REQUEST: PLEASE CHECK YOUR INPUTS';
+                        break;
+                    case 401:
+                        errorMessage = 'UNAUTHORIZED: LOGIN REQUIRED';
+                        break;
+                    case 403:
+                        errorMessage = 'FORBIDDEN: REGISTRATION DISABLED';
+                        break;
+                    case 404:
+                        errorMessage = 'API ENDPOINT NOT FOUND. PLEASE CONTACT ADMIN';
+                        break;
+                    case 409:
+                        errorMessage = serverMessage || 'EMAIL OR PHONE NUMBER ALREADY EXISTS';
+                        break;
+                    case 422:
+                        errorMessage = serverMessage || 'VALIDATION ERROR: PLEASE CHECK ALL FIELDS';
+                        break;
+                    case 500:
+                        errorMessage = 'SERVER ERROR. PLEASE TRY AGAIN LATER';
+                        break;
+                    default:
+                        errorMessage = `ERROR ${status}: ${serverMessage || 'REGISTRATION FAILED'}`;
+                }
+            } else if (err.request) {
+                // Request was made but no response
+                errorMessage = 'CANNOT CONNECT TO SERVER. CHECK IF BACKEND IS RUNNING';
+            } else if (err.message) {
+                // Other errors
+                errorMessage = `ERROR: ${err.message}`;
             }
-            setError(err.response?.data?.message || "Registration failed. Please try again.");
+            
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="register-container">
-            <div className="register-card">
-                <h2 className="register-title">Create an Account</h2>
-                
-                {error && <div className="error-message">{error}</div>}
-                
-                <form onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <input type="text" name="firstName" className="form-control" placeholder="First Name" required onChange={handleChange} />
+        <div className="register-wrapper">
+            <div className="register-container">
+                <div className="register-card">
+                    <div className="register-header">
+                        <img 
+                            src="/GearUpCropped.png" 
+                            alt="GearUp Logo" 
+                            className="register-logo"
+                        />
+                        <p className="register-subtitle">join the gearup network</p>
+                        <div className="register-divider"></div>
                     </div>
-                    <div className="form-group">
-                        <input type="text" name="lastName" className="form-control" placeholder="Last Name" required onChange={handleChange} />
+
+                    {error && (
+                        <div className="register-error">
+                            <span>{error}</span>
+                            <button onClick={() => setError('')} className="register-error-close">×</button>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="register-form">
+                        <div className="register-form-grid">
+                            <div className="register-input-group">
+                                <label className="register-label">FIRST NAME</label>
+                                <input
+                                    type="text"
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="register-input-group">
+                                <label className="register-label">LAST NAME</label>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="register-form-grid">
+                            <div className="register-input-group">
+                                <label className="register-label">EMAIL ADDRESS</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="register-input-group">
+                                <label className="register-label">PHONE NUMBER</label>
+                                <input
+                                    type="text"
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="register-section-divider">
+                            <span className="register-section-title">VEHICLE INFORMATION</span>
+                        </div>
+
+                        <div className="register-form-grid">
+                            <div className="register-input-group">
+                                <label className="register-label">VEHICLE BRAND</label>
+                                <input
+                                    type="text"
+                                    name="brand"
+                                    value={formData.brand}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="register-input-group">
+                                <label className="register-label">VEHICLE MODEL</label>
+                                <input
+                                    type="text"
+                                    name="model"
+                                    value={formData.model}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="register-form-grid">
+                            <div className="register-input-group">
+                                <label className="register-label">VEHICLE YEAR</label>
+                                <input
+                                    type="number"
+                                    name="year"
+                                    value={formData.year}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="register-input-group">
+                                <label className="register-label">PLATE NUMBER</label>
+                                <input
+                                    type="text"
+                                    name="plateNumber"
+                                    value={formData.plateNumber}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="register-section-divider">
+                            <span className="register-section-title">SECURITY CREDENTIALS</span>
+                        </div>
+
+                        <div className="register-form-grid">
+                            <div className="register-input-group">
+                                <label className="register-label">PASSWORD</label>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                            
+                            <div className="register-input-group">
+                                <label className="register-label">CONFIRM PASSWORD</label>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    value={formData.confirmPassword}
+                                    onChange={handleChange}
+                                    className="register-input"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            className={`register-btn ${loading ? 'register-btn-loading' : ''}`}
+                            disabled={loading}
+                        >
+                            {loading ? 'REGISTERING...' : 'REGISTER'}
+                        </button>
+                    </form>
+
+                    <div className="register-login-container">
+                        <Link to="/" className="register-login-link">
+                            ALREADY HAVE AN ACCOUNT? → LOGIN
+                        </Link>
                     </div>
-                    <div className="form-group">
-                        <input type="email" name="email" className="form-control" placeholder="Email Address" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="phone" className="form-control" placeholder="Phone Number" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="brand" className="form-control" placeholder="Vehicle Brand" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="model" className="form-control" placeholder="Vehicle Model" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="number" name="year" className="form-control" placeholder="Vehicle Year" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="text" name="plateNumber" className="form-control" placeholder="Plate Number" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="password" name="password" className="form-control" placeholder="Password" required onChange={handleChange} />
-                    </div>
-                    <div className="form-group">
-                        <input type="password" name="confirmPassword" className="form-control" placeholder="Confirm Password" required onChange={handleChange} />
-                    </div>
-                    
-                    <button type="submit" className="btn-primary" disabled={loading}>
-                        {loading ? 'Registering...' : 'Register'}
-                    </button>
-                </form>
-                
-                <div className="login-link">
-                    Already have an account? <Link to="/">Login here</Link>
                 </div>
             </div>
         </div>
