@@ -106,10 +106,14 @@ function Customers() {
       {/* Top Navbar */}
       <div className="customers-navbar">
         <div className="navbar-left">
-          <button className="back-btn" onClick={() => navigate('/staff/dashboard')}>
-            ← Back
-          </button>
-          <h2 className="navbar-logo">⚙️ VEHICLE PARTS</h2>
+            <button className="back-btn" onClick={() => navigate('/staff/dashboard')}>
+                ← Back
+            </button>
+            <img 
+                src="/GearUpCropped.png" 
+                alt="Vehicle Parts Logo" 
+                className="dashboard-logo-img" 
+            />
         </div>
         <div className="navbar-right">
           <span className="navbar-user">👤 {fullName}</span>

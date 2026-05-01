@@ -47,7 +47,11 @@ function StaffDashboard() {
 
       {/* Top Navbar */}
       <div className="dashboard-navbar">
-        <h2 className="dashboard-logo">⚙️ VEHICLE PARTS</h2>
+        <img 
+            src="/GearUpCropped.png" 
+            alt="Vehicle Parts Logo" 
+            className="dashboard-logo-img" 
+        />
         <div className="navbar-right">
           <span className="navbar-user">👤 {fullName}</span>
           <button className="dashboard-logout-btn" onClick={handleLogout}>LOGOUT</button>

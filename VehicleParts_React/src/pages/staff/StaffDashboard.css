@@ -6,6 +6,12 @@
   position: relative;
 }
 
+.dashboard-logo-img {
+  height: 40px;
+  width: auto; 
+  display: block;
+}
+
 /* Video Background */
 .video-background {
   position: fixed;

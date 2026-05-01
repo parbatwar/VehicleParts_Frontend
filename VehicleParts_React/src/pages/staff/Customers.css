@@ -40,17 +40,16 @@
   width: 100%;
 }
 
+.dashboard-logo-img {
+  height: 40px;
+  width: auto; 
+  display: block;
+}
+
 .navbar-left {
   display: flex;
   align-items: center;
   gap: 20px;
-}
-
-.navbar-logo {
-  color: #f39c12;
-  font-size: 13px;
-  letter-spacing: 2px;
-  margin: 0;
 }
 
 .back-btn {
