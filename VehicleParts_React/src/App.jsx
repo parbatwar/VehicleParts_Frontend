@@ -15,7 +15,7 @@ import CustomerDashboard from './pages/customer/dashboard';
 import About from './pages/customer/About';
 import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
-// import PurchaseInvoicesPage from './pages/admin/PurchaseInvoices'
+import PurchaseInvoicesPage from './pages/admin/Purchase'
 
 function App() {
   return (
@@ -44,12 +44,11 @@ function App() {
             <PartsPage />
         </ProtectedRoute>
         } />
-{/* 
         <Route path="/admin/purchase-invoices" element={
         <ProtectedRoute allowedRole="Admin">
             <PurchaseInvoicesPage />
         </ProtectedRoute>
-        } /> */}
+        } />
 
         {/* Staff Protected Routes */}
         <Route path="/staff/dashboard" element={

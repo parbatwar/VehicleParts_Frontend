@@ -20,6 +20,7 @@ function AdminNavbar() {
     { label: 'VENDORS', path: '/admin/vendors' },
     { label: 'STAFF', path: '/admin/staff' },
     { label: 'PARTS', path: '/admin/parts' },
+    { label: 'PURCHASE', path: '/admin/purchase-invoices' },
   ];
 
   return (
