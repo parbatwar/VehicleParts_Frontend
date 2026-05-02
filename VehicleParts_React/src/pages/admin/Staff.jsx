@@ -301,7 +301,7 @@ function StaffPage() {
                         className="del-h" 
                         disabled={loading}
                       >
-                        REMOVE
+                        DELETE
                       </button>
                     </div>
                   </td>

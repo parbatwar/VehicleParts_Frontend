@@ -1,26 +1,32 @@
 import { useState, useEffect } from 'react';
 import api from '../../api/axios';
 import AdminNavbar from '../../components/AdminNavbar';
-import ConfirmModal from '../../components/ConfirmModal';
 import { styles } from '../../styles/Vendors.styles';
+import './Purchase.css';
 
 function Purchase() {
   const [invoices, setInvoices] = useState([]);
   const [vendors, setVendors] = useState([]);
-  const [parts, setParts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState('');
   const [items, setItems] = useState([
-    { partId: '', quantity: '', unitPrice: '' }
+    {
+      partNumber: '',
+      partName: '',
+      category: '',
+      quantity: '',
+      unitPrice: '',
+      searched: false,
+      isNew: false,
+      currentStock: null
+    }
   ]);
-  const [invoiceToDelete, setInvoiceToDelete] = useState(null);
 
   useEffect(() => {
     fetchInvoices();
     fetchVendors();
-    fetchParts();
   }, []);
 
   const fetchInvoices = async () => {
@@ -42,35 +48,79 @@ function Purchase() {
       const res = await api.get('/vendor');
       setVendors(res.data);
     } catch (err) {
-      console.error('Failed to load vendors:', err);
+      setError('Failed to load vendors.');
     }
   };
 
-  const fetchParts = async () => {
+  const handleSearch = async (index) => {
+    const partNumber = items[index].partNumber.trim();
+    if (!partNumber) return;
+
+    setLoading(true);
     try {
-      const res = await api.get('/part');
-      setParts(res.data);
+      const res = await api.get(`/part/search/${partNumber}`);
+      const updated = [...items];
+
+      if (res.data.exists) {
+        updated[index] = {
+          ...updated[index],
+          partName: res.data.part.name,
+          category: res.data.part.category,
+          unitPrice: res.data.part.unitPrice,
+          currentStock: res.data.part.stockQty,
+          searched: true,
+          isNew: false
+        };
+      } else {
+        updated[index] = {
+          ...updated[index],
+          partName: '',
+          category: '',
+          unitPrice: '',
+          currentStock: null,
+          searched: true,
+          isNew: true
+        };
+      }
+      setItems(updated);
     } catch (err) {
-      console.error('Failed to load parts:', err);
+      const updated = [...items];
+      updated[index] = {
+        ...updated[index],
+        searched: true,
+        isNew: true,
+        currentStock: null
+      };
+      setItems(updated);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleItemChange = (index, field, value) => {
     const updated = [...items];
     updated[index][field] = value;
-
-    if (field === 'partId') {
-      const selectedPart = parts.find(p => p.id === parseInt(value));
-      if (selectedPart) {
-        updated[index].unitPrice = selectedPart.unitPrice;
-      }
-    }
-
     setItems(updated);
   };
 
+  const handlePartNumberKeyPress = (e, index) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch(index);
+    }
+  };
+
   const addItem = () => {
-    setItems([...items, { partId: '', quantity: '', unitPrice: '' }]);
+    setItems([...items, {
+      partNumber: '',
+      partName: '',
+      category: '',
+      quantity: '',
+      unitPrice: '',
+      searched: false,
+      isNew: false,
+      currentStock: null
+    }]);
   };
 
   const removeItem = (index) => {
@@ -92,55 +142,21 @@ function Purchase() {
       const payload = {
         vendorId: parseInt(selectedVendor),
         items: items.map(i => ({
-          partId: parseInt(i.partId),
+          partNumber: i.partNumber,
+          partName: i.partName,
+          category: i.category,
           quantity: parseInt(i.quantity),
           unitPrice: parseFloat(i.unitPrice)
         }))
       };
-
       await api.post('/purchaseinvoice', payload);
       
       resetForm();
       await fetchInvoices();
-      await fetchParts();
       
     } catch (err) {
       console.error('Submit error:', err);
-      let errorMessage = '';
-      if (err.response?.status === 400) {
-        errorMessage = 'VALIDATION ERROR: ' + (err.response.data?.message || 'Invalid input data');
-      } else {
-        errorMessage = err.response?.data?.message || err.message || 'Transaction failed';
-      }
-      setError(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMarkPaid = async (id) => {
-    setLoading(true);
-    try {
-      await api.patch(`/purchaseinvoice/${id}/mark-paid`);
-      await fetchInvoices();
-    } catch (err) {
-      console.error('Error marking paid:', err);
-      setError('Failed to mark as paid.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleConfirmDelete = async () => {
-    setLoading(true);
-    try {
-      await api.delete(`/purchaseinvoice/${invoiceToDelete}`);
-      setInvoiceToDelete(null);
-      await fetchInvoices();
-    } catch (err) {
-      console.error('Delete error:', err);
-      setError('DELETE ERROR: ' + (err.response?.data?.message || err.message));
-      setInvoiceToDelete(null);
+      setError(err.response?.data?.message || 'Failed to create invoice.');
     } finally {
       setLoading(false);
     }
@@ -148,7 +164,16 @@ function Purchase() {
 
   const resetForm = () => {
     setSelectedVendor('');
-    setItems([{ partId: '', quantity: '', unitPrice: '' }]);
+    setItems([{
+      partNumber: '',
+      partName: '',
+      category: '',
+      quantity: '',
+      unitPrice: '',
+      searched: false,
+      isNew: false,
+      currentStock: null
+    }]);
     setShowForm(false);
     setError('');
   };
@@ -156,13 +181,6 @@ function Purchase() {
   return (
     <div style={styles.wrapper}>
       <AdminNavbar />
-      <ConfirmModal
-        isOpen={!!invoiceToDelete}
-        title="DELETE INVOICE"
-        message="Are you sure you want to permanently delete this invoice?"
-        onConfirm={handleConfirmDelete}
-        onCancel={() => setInvoiceToDelete(null)}
-      />
 
       <div style={styles.container}>
         <div style={styles.header}>
@@ -212,53 +230,94 @@ function Purchase() {
             <h4 style={styles.formSubtitle}>INVOICE ITEMS</h4>
 
             {items.map((item, index) => (
-              <div key={index} style={styles.itemRow}>
-                <div style={styles.itemSelect}>
-                  <select
-                    value={item.partId}
-                    onChange={e => handleItemChange(index, 'partId', e.target.value)}
-                    style={styles.input}
-                    required
+              <div key={index} style={styles.itemContainer}>
+                <div style={styles.searchRow}>
+                  <input
+                    placeholder="Enter Part Number (e.g. BP-001)"
+                    value={item.partNumber}
+                    onChange={e => handleItemChange(index, 'partNumber', e.target.value)}
+                    onKeyPress={e => handlePartNumberKeyPress(e, index)}
+                    style={{...styles.input, flex: 3}}
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleSearch(index)}
+                    style={styles.searchBtn}
+                    disabled={loading}
                   >
-                    <option value="">Select Part</option>
-                    {parts.map(p => (
-                      <option key={p.id} value={p.id}>
-                        {p.name} ({p.partNumber}) - Rs. {p.unitPrice}
-                      </option>
-                    ))}
-                  </select>
+                    SEARCH
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(index)}
+                    style={styles.removeBtn}
+                    disabled={loading}
+                  >
+                    ✕
+                  </button>
                 </div>
 
-                <div style={styles.itemQty}>
-                  <input
-                    type="number"
-                    placeholder="Qty"
-                    value={item.quantity}
-                    onChange={e => handleItemChange(index, 'quantity', e.target.value)}
-                    style={styles.input}
-                    required
-                  />
-                </div>
+                {item.searched && (
+                  <div style={styles.searchResult}>
+                    {item.isNew ? (
+                      <div style={styles.newPartBadge}>
+                        🆕 NEW PART — FILL IN DETAILS BELOW
+                      </div>
+                    ) : (
+                      <div style={styles.foundPartBadge}>
+                        ✅ FOUND: {item.partName} | {item.category} | CURRENT STOCK: {item.currentStock}
+                      </div>
+                    )}
+                  </div>
+                )}
 
-                <div style={styles.itemPrice}>
-                  <input
-                    type="number"
-                    placeholder="Unit Price"
-                    value={item.unitPrice}
-                    onChange={e => handleItemChange(index, 'unitPrice', e.target.value)}
-                    style={styles.input}
-                    required
-                  />
-                </div>
+                {item.searched && item.isNew && (
+                  <div style={styles.itemRow}>
+                    <input
+                      placeholder="Part Name"
+                      value={item.partName}
+                      onChange={e => handleItemChange(index, 'partName', e.target.value)}
+                      style={{...styles.input, flex: 2}}
+                      required
+                      disabled={loading}
+                    />
+                    <input
+                      placeholder="Category"
+                      value={item.category}
+                      onChange={e => handleItemChange(index, 'category', e.target.value)}
+                      style={{...styles.input, flex: 1}}
+                      required
+                      disabled={loading}
+                    />
+                  </div>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => removeItem(index)}
-                  style={styles.removeBtn}
-                  className="remove-item-btn"
-                >
-                  ✕
-                </button>
+                {item.searched && (
+                  <div style={styles.itemRow}>
+                    <input
+                      type="number"
+                      placeholder="Quantity"
+                      value={item.quantity}
+                      onChange={e => handleItemChange(index, 'quantity', e.target.value)}
+                      style={{...styles.input, flex: 1}}
+                      required
+                      disabled={loading}
+                    />
+                    <input
+                      type="number"
+                      placeholder="Unit Price"
+                      value={item.unitPrice}
+                      onChange={e => handleItemChange(index, 'unitPrice', e.target.value)}
+                      style={{...styles.input, flex: 1}}
+                      required
+                      disabled={loading}
+                    />
+                    <div style={styles.lineTotal}>
+                      Rs. {(parseFloat(item.quantity || 0) * parseFloat(item.unitPrice || 0)).toFixed(2)}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
 
@@ -266,9 +325,9 @@ function Purchase() {
               type="button"
               onClick={addItem}
               style={styles.addItemBtn}
-              className="add-item-btn"
+              disabled={loading}
             >
-              + ADD ITEM
+              + ADD ANOTHER ITEM
             </button>
 
             <div style={styles.totalContainer}>
@@ -277,135 +336,82 @@ function Purchase() {
             </div>
 
             <div style={styles.formActions}>
-              <button type="submit" style={styles.submitBtn} className="main-action-btn" disabled={loading}>
+              <button type="submit" style={styles.submitBtn} disabled={loading}>
                 {loading ? 'PROCESSING...' : 'CREATE INVOICE'}
               </button>
             </div>
           </form>
         )}
 
-        <div style={styles.tableWrapper}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                {['ID', 'VENDOR', 'TOTAL', 'STATUS', 'DATE', 'ITEMS', 'ACTIONS'].map(h =>
-                  <th key={h} style={styles.th}>{h}</th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {invoices.map((inv) => (
-                <tr key={inv.id} style={styles.tr} className="invoice-row">
-                  <td style={styles.td}>#{inv.id}</td>
-                  <td style={styles.td}>{inv.vendorName}</td>
-                  <td style={{...styles.td, color: '#27ae60', fontWeight: 'bold'}}>
-                    Rs. {inv.totalAmount}
-                  </td>
-                  <td style={styles.td}>
-                    <span style={{
-                      ...styles.statusBadge,
-                      backgroundColor: inv.status === 'Paid' ? 'rgba(46, 204, 113, 0.2)' : 'rgba(243, 156, 18, 0.2)',
-                      color: inv.status === 'Paid' ? '#2ecc71' : '#f39c12'
-                    }}>
+        {loading ? (
+          <div style={styles.loaderLine} />
+        ) : (
+          <div className="invoice-grid">
+            {invoices.length === 0 ? (
+              <div style={styles.emptyState}>NO PURCHASE INVOICES FOUND</div>
+            ) : (
+              invoices.map((inv) => (
+                <div key={inv.id} className="invoice-card">
+                  <div className="card-header">
+                    <div>
+                      <span className="invoice-id">#{inv.id}</span>
+                      <span className="invoice-date">{new Date(inv.date).toLocaleDateString()}</span>
+                    </div>
+                    <span className={`status ${inv.status === 'Paid' ? 'status-paid' : 'status-pending'}`}>
                       {inv.status}
                     </span>
-                  </td>
-                  <td style={styles.td}>
-                    {new Date(inv.date).toLocaleDateString()}
-                  </td>
-                  <td style={styles.td}>
-                    <div style={styles.itemsList}>
+                  </div>
+
+                  <div className="card-body">
+                    <div className="vendor-info">
+                      <span className="vendor-name">{inv.vendorName}</span>
+                    </div>
+
+                    <div className="items-list">
                       {inv.items.map((i, idx) => (
-                        <div key={idx} style={styles.itemTag}>
-                          {i.partName} × {i.quantity}
+                        <div key={idx} className="item-row">
+                          <span className="item-name">{i.partName}</span>
+                          <span className="item-detail">{i.quantity} × Rs. {i.unitPrice}</span>
+                          <span className="item-total">Rs. {i.quantity * i.unitPrice}</span>
                         </div>
                       ))}
                     </div>
-                  </td>
-                  <td style={styles.tdRight}>
-                    <div style={styles.actionGroup}>
-                      {inv.status === 'Pending' && (
-                        <button
-                          onClick={() => handleMarkPaid(inv.id)}
-                          style={styles.paidBtn}
-                          className="paid-btn"
-                          disabled={loading}
-                        >
-                          MARK PAID
-                        </button>
-                      )}
+
+                    <div className="total-row">
+                      <span>TOTAL</span>
+                      <span>Rs. {inv.totalAmount}</span>
+                    </div>
+                  </div>
+
+                  <div className="card-footer">
+                    {inv.status === 'Pending' && (
                       <button
-                        onClick={() => setInvoiceToDelete(inv.id)}
-                        style={styles.deleteBtn}
-                        className="del-h"
+                        onClick={() => handleMarkPaid(inv.id)}
+                        className="mark-paid-btn"
                         disabled={loading}
                       >
-                        DELETE
+                        MARK PAID
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {invoices.length === 0 && !loading && (
-                <tr>
-                  <td colSpan="7" style={styles.emptyState}>NO PURCHASE INVOICES FOUND</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        {loading && <div style={styles.loaderLine} />}
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
-      <style>{`
-        .invoice-row:hover { background-color: #161616 !important; }
-        .del-h:hover { color: #ff6b6b !important; }
-        .paid-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        .remove-item-btn:hover { background-color: #c0392b !important; transform: translateY(-1px); }
-        .add-item-btn:hover { background-color: #2980b9 !important; transform: translateY(-1px); }
-        .main-action-btn:hover { opacity: 0.9; transform: translateY(-1px); }
-        input:focus, select:focus { border-color: #f39c12 !important; outline: none; background-color: #050505 !important; }
-        select { cursor: pointer; }
-        select option { background-color: #050505; color: #fff; }
-      `}</style>
     </div>
   );
 }
 
-// Additional styles not in Vendors.styles
-const additionalStyles = {
-  statusBadge: {
-    display: 'inline-block',
-    padding: '4px 10px',
-    borderRadius: '4px',
+// Additional styles
+Object.assign(styles, {
+  hint: {
+    margin: '8px 0 0',
     fontSize: '10px',
-    fontWeight: 'bold',
-    letterSpacing: '0.5px',
-  },
-  itemsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  itemTag: {
-    fontSize: '11px',
-    color: '#bbb',
-    backgroundColor: '#1a1a1a',
-    padding: '2px 6px',
-    borderRadius: '3px',
-    display: 'inline-block',
-    width: 'fit-content',
-  },
-  paidBtn: {
-    backgroundColor: '#2ecc71',
-    color: '#000',
-    border: 'none',
-    padding: '6px 12px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '10px',
-    fontWeight: 'bold',
-    letterSpacing: '0.5px',
-    transition: 'all 0.2s ease',
+    color: '#f39c12',
+    letterSpacing: '1px',
+    opacity: 0.7,
   },
   formSubtitle: {
     margin: '20px 0 15px 0',
@@ -414,20 +420,29 @@ const additionalStyles = {
     letterSpacing: '1px',
     fontWeight: 600,
   },
-  itemRow: {
+  itemContainer: {
+    backgroundColor: '#0a0a0a',
+    padding: '15px',
+    borderRadius: '8px',
+    marginBottom: '15px',
+    border: '1px solid #222',
+  },
+  searchRow: {
     display: 'flex',
-    gap: '12px',
-    marginBottom: '12px',
+    gap: '10px',
     alignItems: 'center',
+    marginBottom: '10px',
   },
-  itemSelect: {
-    flex: 2,
-  },
-  itemQty: {
-    flex: 0.5,
-  },
-  itemPrice: {
-    flex: 0.5,
+  searchBtn: {
+    backgroundColor: '#3498db',
+    color: '#fff',
+    border: 'none',
+    padding: '10px 16px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    fontSize: '10px',
+    fontWeight: 'bold',
+    letterSpacing: '1px',
   },
   removeBtn: {
     backgroundColor: '#e74c3c',
@@ -438,7 +453,38 @@ const additionalStyles = {
     cursor: 'pointer',
     fontSize: '14px',
     fontWeight: 'bold',
-    transition: 'all 0.2s ease',
+  },
+  searchResult: {
+    marginBottom: '10px',
+  },
+  foundPartBadge: {
+    backgroundColor: 'rgba(46, 204, 113, 0.2)',
+    color: '#2ecc71',
+    padding: '8px 12px',
+    borderRadius: '4px',
+    fontSize: '11px',
+  },
+  newPartBadge: {
+    backgroundColor: 'rgba(243, 156, 18, 0.2)',
+    color: '#f39c12',
+    padding: '8px 12px',
+    borderRadius: '4px',
+    fontSize: '11px',
+  },
+  itemRow: {
+    display: 'flex',
+    gap: '10px',
+    alignItems: 'center',
+    marginTop: '10px',
+  },
+  lineTotal: {
+    flex: 1,
+    padding: '10px',
+    backgroundColor: '#151515',
+    borderRadius: '4px',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: '#f39c12',
   },
   addItemBtn: {
     backgroundColor: '#3498db',
@@ -451,7 +497,7 @@ const additionalStyles = {
     fontWeight: 'bold',
     letterSpacing: '1px',
     marginTop: '10px',
-    transition: 'all 0.2s ease',
+    width: '100%',
   },
   totalContainer: {
     margin: '20px 0',
@@ -474,9 +520,16 @@ const additionalStyles = {
     color: '#f39c12',
     fontWeight: 'bold',
   },
-};
-
-// Merge styles
-Object.assign(styles, additionalStyles);
+  emptyState: {
+    textAlign: 'center',
+    padding: '60px',
+    color: '#666',
+    fontSize: '11px',
+    letterSpacing: '2px',
+    backgroundColor: '#111',
+    borderRadius: '8px',
+    border: '1px solid #222',
+  },
+});
 
 export default Purchase;

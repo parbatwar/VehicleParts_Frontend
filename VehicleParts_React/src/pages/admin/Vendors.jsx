@@ -125,7 +125,7 @@ function VendorPage() {
                   <td style={styles.tdRight}>
                     <div style={styles.actionGroup}>
                       <button onClick={() => startEdit(v)} style={styles.editBtn} className="edit-h">EDIT</button>
-                      <button onClick={() => setVendorToDelete(v.id)} style={styles.deleteBtn} className="del-h">REMOVE</button>
+                      <button onClick={() => setVendorToDelete(v.id)} style={styles.deleteBtn} className="del-h">DELETE</button>
                     </div>
                   </td>
                 </tr>
