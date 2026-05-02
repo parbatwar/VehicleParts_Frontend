@@ -1,154 +1,248 @@
-.invoice-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.invoice-card {
-  background-color: #111;
-  border: 1px solid #222;
+/* Item Container */
+.item-container {
+  background-color: #0a0a0a;
+  padding: 15px;
   border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.2s ease;
+  margin-bottom: 15px;
+  border: 1px solid #222;
 }
 
-.invoice-card:hover {
-  border-color: #f39c12;
-  transform: translateY(-2px);
-}
-
-.card-header {
+/* Search Row */
+.search-row {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   align-items: center;
-  padding: 15px 20px;
-  background-color: #151515;
-  border-bottom: 1px solid #222;
+  margin-bottom: 10px;
 }
 
-.invoice-id {
-  font-size: 14px;
-  font-weight: bold;
-  color: #f39c12;
+.form-input-flex-3 {
+  flex: 3;
+  padding: 10px 12px;
+  background-color: #050505;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
   font-family: monospace;
 }
 
-.invoice-date {
-  font-size: 11px;
-  color: #666;
-  margin-left: 10px;
-}
-
-.status {
-  padding: 4px 10px;
-  border-radius: 4px;
-  font-size: 10px;
-  font-weight: bold;
-}
-
-.status-paid {
-  background-color: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-}
-
-.status-pending {
-  background-color: rgba(243, 156, 18, 0.2);
-  color: #f39c12;
-}
-
-.card-body {
-  padding: 20px;
-}
-
-.vendor-info {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #1a1a1a;
-}
-
-.vendor-name {
-  font-size: 14px;
-  color: #fff;
-  font-weight: 500;
-}
-
-.items-list {
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #1a1a1a;
-}
-
-.item-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 0;
-  font-size: 12px;
-}
-
-.item-name {
-  color: #f39c12;
+.form-input-flex-2 {
   flex: 2;
+  padding: 10px 12px;
+  background-color: #050505;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-family: monospace;
 }
 
-.item-detail {
-  color: #888;
+.form-input-flex-1 {
   flex: 1;
-  text-align: center;
+  padding: 10px 12px;
+  background-color: #050505;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+  font-family: monospace;
 }
 
-.item-total {
-  color: #2ecc71;
-  flex: 1;
-  text-align: right;
+.form-input-flex-3:focus,
+.form-input-flex-2:focus,
+.form-input-flex-1:focus {
+  border-color: #f39c12;
+  outline: none;
 }
 
-.total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.total-row span:first-child {
-  color: #888;
-}
-
-.total-row span:last-child {
-  color: #f39c12;
-  font-size: 18px;
-}
-
-.card-footer {
-  padding: 15px 20px;
-  background-color: #0a0a0a;
-  border-top: 1px solid #222;
-}
-
-.mark-paid-btn {
-  width: 100%;
-  background-color: #2ecc71;
-  color: #000;
+/* Search Button */
+.search-btn {
+  background-color: #3498db;
+  color: #fff;
   border: none;
-  padding: 10px;
+  padding: 10px 16px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: bold;
   letter-spacing: 1px;
   transition: all 0.2s ease;
 }
 
-.mark-paid-btn:hover {
-  background-color: #27ae60;
+.search-btn:hover:not(:disabled) {
+  background-color: #2980b9;
   transform: translateY(-1px);
 }
 
+/* Remove Button */
+.remove-btn {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.remove-btn:hover:not(:disabled) {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+/* Search Results */
+.search-result {
+  margin-bottom: 10px;
+}
+
+.found-part-badge {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.new-part-badge {
+  background-color: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+/* Item Row */
+.item-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.line-total {
+  flex: 1;
+  padding: 10px;
+  background-color: #151515;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+  color: #f39c12;
+}
+
+/* Add Item Button */
+.add-item-btn {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.add-item-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* Total Container */
+.total-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #0a0a0a;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #222;
+}
+
+.total-label {
+  font-size: 12px;
+  color: #888;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.total-value {
+  font-size: 20px;
+  color: #f39c12;
+  font-weight: bold;
+}
+
+/* Invoice Row Hover */
+.invoice-row:hover {
+  background-color: #161616 !important;
+}
+
+/* Main Action Button */
+.main-action-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Focus States */
+input:focus, select:focus {
+  border-color: #f39c12 !important;
+  outline: none;
+  background-color: #050505 !important;
+}
+
+/* Number Input Spinner Removal */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* Select Dropdown */
+select {
+  cursor: pointer;
+}
+
+select option {
+  background-color: #050505;
+  color: #fff;
+}
+
+/* Disabled Button State */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .invoice-grid {
-    grid-template-columns: 1fr;
+  .search-row {
+    flex-wrap: wrap;
+  }
+  
+  .item-row {
+    flex-wrap: wrap;
+  }
+  
+  .form-input-flex-3,
+  .form-input-flex-2,
+  .form-input-flex-1 {
+    flex: 100%;
+  }
+  
+  .search-btn,
+  .remove-btn {
+    flex: 1;
   }
 }

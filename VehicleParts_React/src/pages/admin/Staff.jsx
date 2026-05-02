@@ -192,7 +192,6 @@ function StaffPage() {
                   onChange={(e) => setForm({...form, firstName: e.target.value})}
                   required
                   disabled={loading}
-                  placeholder="John"
                 />
               </div>
               
@@ -204,7 +203,6 @@ function StaffPage() {
                   onChange={(e) => setForm({...form, lastName: e.target.value})}
                   required
                   disabled={loading}
-                  placeholder="Doe"
                 />
               </div>
               
@@ -217,7 +215,6 @@ function StaffPage() {
                   onChange={(e) => setForm({...form, email: e.target.value})}
                   required
                   disabled={loading}
-                  placeholder="john.doe@example.com"
                 />
               </div>
               
@@ -231,7 +228,6 @@ function StaffPage() {
                     onChange={(e) => setForm({...form, password: e.target.value})}
                     required
                     disabled={loading}
-                    placeholder="Minimum 8 characters"
                   />
                 </div>
               )}
@@ -243,7 +239,6 @@ function StaffPage() {
                   value={form.phone}
                   onChange={(e) => setForm({...form, phone: e.target.value})}
                   disabled={loading}
-                  placeholder="+1234567890"
                 />
               </div>
               
@@ -254,7 +249,6 @@ function StaffPage() {
                   value={form.position}
                   onChange={(e) => setForm({...form, position: e.target.value})}
                   disabled={loading}
-                  placeholder="Mechanic, Manager, etc."
                 />
               </div>
             </div>
