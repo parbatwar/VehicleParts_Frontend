@@ -17,6 +17,9 @@ import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
 import PurchaseInvoicesPage from './pages/admin/Purchase'
 import Sales from './pages/staff/Sales';
+import StaffManagement from './pages/admin/StaffManagement';
+import CustomerReports from './pages/staff/CustomerReports';
+import AdminNotifications from './components/AdminNotifications';
 
 function App() {
   return (
@@ -38,6 +41,26 @@ function App() {
         <Route path="/admin/staff" element={
           <ProtectedRoute allowedRole="Admin">
             <StaffPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/staff-management" element={
+          <ProtectedRoute allowedRole="Admin">
+            <StaffManagement />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/notifications" element={
+          <ProtectedRoute allowedRole="Admin">
+            <AdminNotifications />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/staff-management" element={
+          <ProtectedRoute allowedRole="Admin">
+            <StaffManagement />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/notifications" element={
+          <ProtectedRoute allowedRole="Admin">
+            <AdminNotifications />
           </ProtectedRoute>
         } />
         <Route path="/admin/parts" element={
@@ -67,6 +90,12 @@ function App() {
         <ProtectedRoute allowedRole="Staff">
             <Sales />
         </ProtectedRoute>
+        } />
+
+        <Route path="/staff/customer-reports" element={
+          <ProtectedRoute allowedRole="Staff">
+            <CustomerReports />
+          </ProtectedRoute>
         } />
 
 
@@ -104,6 +133,11 @@ function App() {
         <Route path="/customer/history" element={
           <ProtectedRoute allowedRole="Customer">
             <History />
+          </ProtectedRoute>
+        } />
+        <Route path="/staff/customer-reports" element={
+          <ProtectedRoute allowedRole="Staff">
+            <CustomerReports />
           </ProtectedRoute>
         } />
       </Routes>
