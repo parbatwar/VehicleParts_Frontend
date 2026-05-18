@@ -1,14 +1,119 @@
-/* About Wrapper */
-.about-wrapper {
-  min-height: 100vh;
-  background-color: #0f0f0f;
-  background-image: radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px);
-  background-size: 20px 20px;
+/* Page Background Matching the Rest of the App */
+.about-page {
+    min-height: 100vh;
+    background-color: #0f0f0f;
+    background-image: radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: #fff;
+    padding-bottom: 60px;
 }
 
 .about-container {
-  padding: 40px max(5vw, 20px);
-  max-width: 1400px;
-  margin: 0 auto;
-  min-height: calc(100vh - 70px);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px max(5vw, 20px);
+}
+
+/* Header Styling */
+.about-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.about-header h2 {
+    font-size: 28px;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.about-subtitle {
+    color: #aaaaaa;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+}
+
+.header-divider {
+    width: 60px;
+    height: 4px;
+    background-color: #f39c12;
+    margin: 0 auto;
+    border-radius: 2px;
+}
+
+/* Main Content Area */
+.about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Reusable Card Component */
+.about-card {
+    background-color: #111111;
+    border: 1px solid #222222;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-4px);
+    border-color: #333333;
+}
+
+.about-card h3 {
+    font-size: 18px;
+    color: #f39c12;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-transform: uppercase;
+}
+
+.about-card p {
+    color: #cccccc;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 3-Column Grid for Features */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Contact Information Formatting */
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-info p {
+    font-size: 14px;
+}
+
+.contact-info strong {
+    color: #ffffff;
+    margin-right: 8px;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Adjustments for Mobile */
+@media (max-width: 768px) {
+    .about-header h2 {
+        font-size: 24px;
+    }
+    
+    .about-card {
+        padding: 20px;
+    }
 }
