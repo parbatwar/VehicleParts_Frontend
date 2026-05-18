@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../api/axios'
+import StaffNavbar from '../../components/StaffNavbar'
 import './Customers.css'
 
 function Customers() {
   const navigate = useNavigate()
-  const [showForm, setShowForm] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [form, setForm] = useState({
     firstName: '', lastName: '', email: '',
     password: '', phone: '',
@@ -17,12 +18,6 @@ function Customers() {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [isSearching, setIsSearching] = useState(false)
-  const fullName = localStorage.getItem('fullName')
-
-  const handleLogout = () => {
-    localStorage.clear()
-    navigate('/')
-  }
 
   useEffect(() => {
     fetchCustomers()
@@ -55,7 +50,10 @@ function Customers() {
         password: '', phone: '',
         brand: '', model: '', year: '', plateNumber: ''
       })
-      setShowForm(false)
+      setTimeout(() => {
+        setShowModal(false)
+        setMessage('')
+      }, 1500)
       fetchCustomers()
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong!')
@@ -90,104 +88,148 @@ function Customers() {
         <h4 className="card-name">{c.fullName}</h4>
         <span className="badge">{c.regType}</span>
       </div>
-      <p className="card-text">📧 {c.email}</p>
-      <p className="card-text">📞 {c.phone || 'N/A'}</p>
-      {c.vehicles.map(v => (
-        <p key={v.id} className="card-text">
-          🚗 {v.brand} {v.model} ({v.year}) — {v.plateNumber}
+      <div className="card-details">
+        <p className="card-text">
+          <i className="fas fa-envelope"></i> {c.email}
         </p>
-      ))}
+        <p className="card-text">
+          <i className="fas fa-phone"></i> {c.phone || 'N/A'}
+        </p>
+        {c.vehicles && c.vehicles.length > 0 && (
+          <div className="vehicle-info">
+            <i className="fas fa-car"></i>
+            <span>{c.vehicles[0].brand} {c.vehicles[0].model} ({c.vehicles[0].year})</span>
+          </div>
+        )}
+        {c.vehicles && c.vehicles.length > 1 && (
+          <div className="more-vehicles">+{c.vehicles.length - 1} more vehicle(s)</div>
+        )}
+      </div>
     </div>
   )
 
   return (
-    <div className="customers-container">
+    <div className="customers-page">
+      <StaffNavbar />
 
-      {/* Top Navbar */}
-      <div className="customers-navbar">
-        <div className="navbar-left">
-            <button className="back-btn" onClick={() => navigate('/staff/dashboard')}>
-                ← Back
-            </button>
-            <img 
-                src="/GearUpCropped.png" 
-                alt="Vehicle Parts Logo" 
-                className="dashboard-logo-img" 
-            />
-        </div>
-        <div className="navbar-right">
-          <span className="navbar-user">👤 {fullName}</span>
-          <button className="navbar-logout-btn" onClick={handleLogout}>LOGOUT</button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="main-content">
-        <div className="top-bar">
-          <h1 className="page-title">CUSTOMER MANAGEMENT</h1>
-          <button className="add-btn" onClick={() => { setShowForm(!showForm); setMessage(''); setError('') }}>
-            {showForm ? '✕ Cancel' : '+ Add Customer'}
+      <div className="customers-container">
+        <div className="customers-header">
+          <div>
+            <h1 className="customers-title">CUSTOMER MANAGEMENT</h1>
+            <p className="customers-subtitle">manage customer accounts & vehicles</p>
+          </div>
+          <button className="add-customer-btn" onClick={() => setShowModal(true)}>
+            + ADD CUSTOMER
           </button>
         </div>
 
         {/* Search Bar */}
-        <div className="search-box">
-          <input
-            className="search-input"
-            placeholder="Search by name, phone, email, plate number..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-          />
-          <button className="search-btn" onClick={handleSearch}>SEARCH</button>
-          {isSearching && (
-            <button className="clear-btn" onClick={handleSearchClear}>CLEAR</button>
-          )}
+        <div className="search-section">
+          <div className="search-box">
+            <input
+              className="search-input"
+              placeholder="Search by name, phone, email, or plate number..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+            />
+            <button className="search-btn" onClick={handleSearch}>SEARCH</button>
+            {isSearching && (
+              <button className="clear-btn" onClick={handleSearchClear}>CLEAR</button>
+            )}
+          </div>
         </div>
 
-        {/* Register Form */}
-        {showForm && (
-          <div className="form-container">
-            <h3 className="section-title">NEW CUSTOMER REGISTRATION</h3>
-            {message && <div className="success-msg">{message}</div>}
-            {error && <div className="error-msg">{error}</div>}
-            <form onSubmit={handleSubmit}>
-              <p className="form-section-title">CUSTOMER INFO</p>
-              <div className="form-row">
-                <input className="form-input" name="firstName" placeholder="First Name" value={form.firstName} onChange={handleChange} required />
-                <input className="form-input" name="lastName" placeholder="Last Name" value={form.lastName} onChange={handleChange} required />
-              </div>
-              <div className="form-row">
-                <input className="form-input" name="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-                <input className="form-input" name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-              </div>
-              <div className="form-row">
-                <input className="form-input" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} />
-              </div>
-
-              <p className="form-section-title">VEHICLE INFO</p>
-              <div className="form-row">
-                <input className="form-input" name="brand" placeholder="Brand (e.g. Toyota)" value={form.brand} onChange={handleChange} required />
-                <input className="form-input" name="model" placeholder="Model (e.g. Corolla)" value={form.model} onChange={handleChange} required />
-              </div>
-              <div className="form-row">
-                <input className="form-input" name="year" type="number" placeholder="Year (e.g. 2020)" value={form.year} onChange={handleChange} required />
-                <input className="form-input" name="plateNumber" placeholder="Plate Number" value={form.plateNumber} onChange={handleChange} required />
-              </div>
-              <button type="submit" className="submit-btn">REGISTER CUSTOMER</button>
-            </form>
+        {/* Customer Grid */}
+        <div className="customers-section">
+          <h3 className="section-title">
+            {isSearching ? `SEARCH RESULTS (${searchResults.length})` : `ALL CUSTOMERS (${customers.length})`}
+          </h3>
+          <div className="customers-grid">
+            {displayedCustomers.length === 0
+              ? <div className="empty-state">No customers found.</div>
+              : displayedCustomers.map(c => <CustomerCard key={c.id} c={c} />)
+            }
           </div>
-        )}
-
-        {/* Customer List */}
-        <h3 className="section-title">
-          {isSearching ? `Search Results (${searchResults.length})` : `All Customers (${customers.length})`}
-        </h3>
-        {displayedCustomers.length === 0
-          ? <p className="card-text">No customers found.</p>
-          : displayedCustomers.map(c => <CustomerCard key={c.id} c={c} />)
-        }
+        </div>
       </div>
+
+      {/* Modal Popup for Add Customer */}
+      {showModal && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>ADD NEW CUSTOMER</h2>
+              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              {message && <div className="success-message">{message}</div>}
+              {error && <div className="error-message">{error}</div>}
+              
+              <form onSubmit={handleSubmit}>
+                <div className="form-section">
+                  <h4 className="form-section-title">CUSTOMER INFORMATION</h4>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">FIRST NAME *</label>
+                      <input className="form-input" name="firstName" value={form.firstName} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">LAST NAME *</label>
+                      <input className="form-input" name="lastName" value={form.lastName} onChange={handleChange} required />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">EMAIL *</label>
+                      <input className="form-input" name="email" type="email" value={form.email} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">PASSWORD *</label>
+                      <input className="form-input" name="password" type="password" value={form.password} onChange={handleChange} required />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">PHONE NUMBER</label>
+                      <input className="form-input" name="phone" value={form.phone} onChange={handleChange} />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="form-section">
+                  <h4 className="form-section-title">VEHICLE INFORMATION</h4>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">BRAND *</label>
+                      <input className="form-input" name="brand" value={form.brand} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">MODEL *</label>
+                      <input className="form-input" name="model" value={form.model} onChange={handleChange} required />
+                    </div>
+                  </div>
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label className="form-label">YEAR *</label>
+                      <input className="form-input" name="year" type="number" value={form.year} onChange={handleChange} required />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">PLATE NUMBER *</label>
+                      <input className="form-input" name="plateNumber" value={form.plateNumber} onChange={handleChange} required />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="modal-actions">
+                  <button type="button" className="cancel-btn" onClick={() => setShowModal(false)}>CANCEL</button>
+                  <button type="submit" className="submit-btn">REGISTER CUSTOMER</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

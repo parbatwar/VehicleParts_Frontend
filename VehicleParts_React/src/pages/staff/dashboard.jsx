@@ -1,41 +1,41 @@
-import { useNavigate } from 'react-router-dom'
-import StaffNavbar from '../../components/StaffNavbar'
-import './StaffDashboard.css'
+import { useNavigate } from 'react-router-dom';
+import StaffNavbar from '../../components/StaffNavbar';
+import './StaffDashboard.css';
 
 function StaffDashboard() {
-  const navigate = useNavigate()
-  const fullName = localStorage.getItem('fullName')
+  const navigate = useNavigate();
+  const fullName = localStorage.getItem('fullName');
 
   const features = [
     {
-      icon: '👥',
+      icon: <i className="fas fa-users"></i>,
       title: 'Customer Management',
       desc: 'Register new customers with vehicle details, view customer profiles, and manage customer information.',
       btn: 'Manage Customers',
       path: '/staff/customers'
     },
     {
-      icon: '🔍',
+      icon: <i className="fas fa-search"></i>,
       title: 'Search Customers',
       desc: 'Search customers by name, phone number, vehicle plate number, or customer ID instantly.',
       btn: 'Search Now',
       path: '/staff/customers'
     },
     {
-      icon: '📋',
+      icon: <i className="fas fa-history"></i>,
       title: 'Customer History',
       desc: 'View complete customer purchase history, vehicle information, and service records.',
       btn: 'View History',
       path: '/staff/customers'
     },
     {
-      icon: '💰',
+      icon: <i className="fas fa-shopping-cart"></i>,
       title: 'Sales',
       desc: 'Process customer sales, create invoices, and manage transactions.',
       btn: 'New Sale',
       path: '/staff/sales'
     }
-  ]
+  ];
 
   return (
     <div className="staff-dashboard-wrapper">
@@ -73,7 +73,7 @@ function StaffDashboard() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default StaffDashboard
+export default StaffDashboard;

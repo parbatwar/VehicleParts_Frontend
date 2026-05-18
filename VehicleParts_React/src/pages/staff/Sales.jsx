@@ -1,266 +1,228 @@
 import { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import StaffNavbar from '../../components/StaffNavbar';
+import SalesHistory from './SalesHistory';
+import { 
+  SearchIcon, PlusIcon, UserIcon, ShoppingCartIcon, 
+  CashIcon, CardIcon, BankIcon, CreditIcon, CheckIcon, 
+  TrashIcon, MinusIcon, VendorIcon 
+} from './SalesIcons';
 import './Sales.css';
 
-// SVG Icon Components
-const SearchIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="10" cy="10" r="7" /><line x1="15" y1="15" x2="21" y2="21" />
-  </svg>
-);
-const PlusIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-const UserIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
-  </svg>
-);
-const ShoppingCartIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
-    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-  </svg>
-);
-const CashIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="2" />
-    <path d="M6 12h.01M18 12h.01" />
-  </svg>
-);
-const CardIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="2" y="4" width="20" height="16" rx="2" /><path d="M2 8h20" />
-  </svg>
-);
-const BankIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polygon points="3 10 12 5 21 10" /><rect x="3" y="10" width="18" height="12" rx="2" />
-    <line x1="7" y1="15" x2="7" y2="18" /><line x1="12" y1="15" x2="12" y2="18" /><line x1="17" y1="15" x2="17" y2="18" />
-  </svg>
-);
-const CreditIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M21 12H3" /><path d="M12 3v18" /><path d="M18 6l3 3-3 3" /><path d="M6 18l-3-3 3-3" />
-  </svg>
-);
-const CheckIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-const TrashIcon = () => (
-  <svg className="icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
-    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-  </svg>
-);
-const MinusIcon = () => (
-  <svg className="icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <line x1="5" y1="12" x2="19" y2="12" />
-  </svg>
-);
-const VendorIcon = () => (
-  <svg className="icon-svg-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <rect x="4" y="8" width="16" height="14" rx="2" /><path d="M8 4v4" /><path d="M16 4v4" /><path d="M4 12h16" />
-  </svg>
-);
-const HistoryIcon = () => (
-  <svg className="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-  </svg>
-);
-
 function Sales() {
-  const [sales, setSales] = useState([]);
-  const [customers, setCustomers] = useState([]);
-  const [filteredCustomers, setFilteredCustomers] = useState([]);
-  const [parts, setParts] = useState([]);
-  const [filteredParts, setFilteredParts] = useState([]);
-  const [staffList, setStaffList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [showForm, setShowForm] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [customerSearchTerm, setCustomerSearchTerm] = useState('');
-  const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
-  const [items, setItems] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState('cash');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedVendor, setSelectedVendor] = useState('all');
-  const [vendors, setVendors] = useState([]);
-  const customerSearchRef = useRef(null);
+    const [sales, setSales] = useState([]);
+    const [customers, setCustomers] = useState([]);
+    const [filteredCustomers, setFilteredCustomers] = useState([]);
+    const [parts, setParts] = useState([]);
+    const [filteredParts, setFilteredParts] = useState([]);
+    // const [staffList, setStaffList] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [showForm, setShowForm] = useState(false);
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [customerSearchTerm, setCustomerSearchTerm] = useState('');
+    const [showCustomerDropdown, setShowCustomerDropdown] = useState(false);
+    const [items, setItems] = useState([]);
+    const [paymentMethod, setPaymentMethod] = useState('cash');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedVendor, setSelectedVendor] = useState('all');
+    const [vendors, setVendors] = useState([]);
+    const customerSearchRef = useRef(null);
 
-  useEffect(() => {
-    fetchSales();
-    fetchCustomers();
-    fetchParts();
-    fetchStaff();
-  }, []);
+    useEffect(() => {
+        fetchSales();
+        fetchCustomers();
+        fetchParts();
+        // fetchStaff();
+    }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
-        setShowCustomerDropdown(false);
-      }
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+        if (customerSearchRef.current && !customerSearchRef.current.contains(e.target)) {
+            setShowCustomerDropdown(false);
+        }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const fetchSales = async () => {
+        setLoading(true);
+        try {
+        const res = await api.get('/sale');
+        setSales(res.data);
+        } catch (err) {
+        console.error('Fetch error:', err);
+        } finally {
+        setLoading(false);
+        }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
-  const fetchSales = async () => {
-    setLoading(true);
+    const fetchCustomers = async () => {
+        try {
+        const res = await api.get('/customer');
+        setCustomers(res.data);
+        } catch (err) {
+        setError('Failed to load customers.');
+        }
+    };
+
+    const fetchParts = async () => {
+        try {
+        const res = await api.get('/part');
+        setParts(res.data);
+        setFilteredParts(res.data);
+        extractVendorsFromParts(res.data);
+        } catch (err) {
+        setError('Failed to load parts.');
+        }
+    };
+
+    const fetchMyStaffProfile = async () => {
     try {
-      const res = await api.get('/sale');
-      setSales(res.data);
+        const res = await api.get('/staff/me');
+        console.log('My staff profile:', res.data);
+        return res.data;
     } catch (err) {
-      console.error('Fetch error:', err);
-    } finally {
-      setLoading(false);
+        console.error('Failed to fetch staff profile:', err);
+        return null;
     }
-  };
+    };
 
-  const fetchCustomers = async () => {
-    try {
-      const res = await api.get('/customer');
-      setCustomers(res.data);
-    } catch (err) {
-      setError('Failed to load customers.');
-    }
-  };
+    // Add this useEffect to debug
+    useEffect(() => {
+    const debugStaffAndUser = async () => {
+        try {
+        const token = localStorage.getItem('token');
+        const payloadToken = JSON.parse(atob(token.split('.')[1]));
+        console.log('=== DEBUG INFO ===');
+        console.log('Token payload:', payloadToken);
+        console.log('User ID from token:', payloadToken.Id);
+        console.log('User Email:', payloadToken.Email || payloadToken.email);
+        console.log('User Role:', payloadToken.role || payloadToken.Role);
+        console.log('All claims:', Object.keys(payloadToken));
+        
+        // Check the role claim properly
+        const roleClaim = payloadToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+        console.log('Role claim value:', roleClaim);
+        
+        } catch (err) {
+        console.error('Debug error:', err);
+        }
+    };
+    
+    debugStaffAndUser();
+    }, []);
 
-  const fetchParts = async () => {
-    try {
-      const res = await api.get('/part');
-      setParts(res.data);
-      setFilteredParts(res.data);
-      extractVendorsFromParts(res.data);
-    } catch (err) {
-      setError('Failed to load parts. Make sure backend is running.');
-    }
-  };
+    const extractVendorsFromParts = (partsData) => {
+        const uniqueVendors = [];
+        const vendorNames = new Set();
+        partsData.forEach(part => {
+        if (part.vendorName && !vendorNames.has(part.vendorName)) {
+            vendorNames.add(part.vendorName);
+            uniqueVendors.push({ id: part.vendorName, name: part.vendorName });
+        }
+        });
+        setVendors(uniqueVendors);
+    };
 
-  const fetchStaff = async () => {
-    try {
-      const res = await api.get('/staff');
-      setStaffList(res.data);
-    } catch (err) {
-      console.error('Failed to load staff:', err);
-    }
-  };
+    useEffect(() => {
+        if (customerSearchTerm.trim() === '') {
+        setFilteredCustomers([]);
+        } else {
+        const filtered = customers.filter(c =>
+            c.fullName?.toLowerCase().includes(customerSearchTerm.toLowerCase()) ||
+            c.phone?.includes(customerSearchTerm)
+        );
+        setFilteredCustomers(filtered.slice(0, 10));
+        }
+    }, [customerSearchTerm, customers]);
 
-  const extractVendorsFromParts = (partsData) => {
-    const uniqueVendors = [];
-    const vendorNames = new Set();
-    partsData.forEach(part => {
-      if (part.vendorName && !vendorNames.has(part.vendorName)) {
-        vendorNames.add(part.vendorName);
-        uniqueVendors.push({ id: part.vendorName, name: part.vendorName });
-      }
-    });
-    setVendors(uniqueVendors);
-  };
+    useEffect(() => {
+        let filtered = parts;
+        if (searchTerm.trim() !== '') {
+        filtered = filtered.filter(p =>
+            p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.vendorName?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        }
+        if (selectedVendor !== 'all') {
+        filtered = filtered.filter(p => p.vendorName === selectedVendor);
+        }
+        filtered.sort((a, b) => {
+        if (a.vendorName !== b.vendorName) return (a.vendorName || '').localeCompare(b.vendorName || '');
+        return (a.name || '').localeCompare(b.name || '');
+        });
+        setFilteredParts(filtered);
+    }, [searchTerm, selectedVendor, parts]);
 
-  useEffect(() => {
-    if (customerSearchTerm.trim() === '') {
-      setFilteredCustomers([]);
-    } else {
-      const filtered = customers.filter(c =>
-        c.fullName?.toLowerCase().includes(customerSearchTerm.toLowerCase()) ||
-        c.phone?.includes(customerSearchTerm)
-      );
-      setFilteredCustomers(filtered.slice(0, 10));
-    }
-  }, [customerSearchTerm, customers]);
+    const selectCustomer = (customer) => {
+        setSelectedCustomer(customer);
+        setCustomerSearchTerm(customer.fullName);
+        setShowCustomerDropdown(false);
+    };
 
-  useEffect(() => {
-    let filtered = parts;
-    if (searchTerm.trim() !== '') {
-      filtered = filtered.filter(p =>
-        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.vendorName?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    if (selectedVendor !== 'all') {
-      filtered = filtered.filter(p => p.vendorName === selectedVendor);
-    }
-    filtered.sort((a, b) => {
-      if (a.vendorName !== b.vendorName) return (a.vendorName || '').localeCompare(b.vendorName || '');
-      return (a.name || '').localeCompare(b.name || '');
-    });
-    setFilteredParts(filtered);
-  }, [searchTerm, selectedVendor, parts]);
+    const addToCart = (part) => {
+        const existingItem = items.find(i => i.partId === part.id);
+        if (existingItem) {
+        const newQuantity = parseInt(existingItem.quantity) + 1;
+        if (newQuantity > part.stockQty) {
+            setError(`Cannot add more ${part.name}. Only ${part.stockQty} in stock.`);
+            setTimeout(() => setError(''), 3000);
+            return;
+        }
+        setItems(items.map(i => i.partId === part.id ? { ...i, quantity: newQuantity.toString() } : i));
+        } else {
+        if (part.stockQty < 1) {
+            setError(`${part.name} is out of stock.`);
+            setTimeout(() => setError(''), 3000);
+            return;
+        }
+        setItems([...items, {
+            partId: part.id,
+            partName: part.name,
+            vendorName: part.vendorName || 'Unknown Vendor',
+            quantity: '1',
+            unitPrice: part.unitPrice,
+            stockQty: part.stockQty,
+            maxStock: part.stockQty
+        }]);
+        }
+    };
 
-  const selectCustomer = (customer) => {
-    setSelectedCustomer(customer);
-    setCustomerSearchTerm(customer.fullName);
-    setShowCustomerDropdown(false);
-  };
-
-  const addToCart = (part) => {
-    const existingItem = items.find(i => i.partId === part.id);
-    if (existingItem) {
-      const newQuantity = parseInt(existingItem.quantity) + 1;
-      if (newQuantity > part.stockQty) {
-        setError(`Cannot add more ${part.name}. Only ${part.stockQty} in stock.`);
+    const updateQuantity = (index, newQuantity) => {
+        const item = items[index];
+        if (newQuantity < 1) { removeItem(index); return; }
+        if (newQuantity > item.maxStock) {
+        setError(`Only ${item.maxStock} units of ${item.partName} available.`);
         setTimeout(() => setError(''), 3000);
         return;
-      }
-      setItems(items.map(i => i.partId === part.id ? { ...i, quantity: newQuantity.toString() } : i));
-    } else {
-      if (part.stockQty < 1) {
-        setError(`${part.name} is out of stock.`);
-        setTimeout(() => setError(''), 3000);
-        return;
-      }
-      setItems([...items, {
-        partId: part.id,
-        partName: part.name,
-        vendorName: part.vendorName || 'Unknown Vendor',
-        quantity: '1',
-        unitPrice: part.unitPrice,
-        stockQty: part.stockQty,
-        maxStock: part.stockQty
-      }]);
-    }
-  };
+        }
+        const updated = [...items];
+        updated[index].quantity = newQuantity;
+        setItems(updated);
+    };
 
-  const updateQuantity = (index, newQuantity) => {
-    const item = items[index];
-    if (newQuantity < 1) { removeItem(index); return; }
-    if (newQuantity > item.maxStock) {
-      setError(`Only ${item.maxStock} units of ${item.partName} available.`);
-      setTimeout(() => setError(''), 3000);
-      return;
-    }
-    const updated = [...items];
-    updated[index].quantity = newQuantity;
-    setItems(updated);
-  };
+    const removeItem = (index) => setItems(items.filter((_, i) => i !== index));
 
-  const removeItem = (index) => setItems(items.filter((_, i) => i !== index));
+    const calculateSubtotal = () =>
+        items.reduce((sum, item) => sum + (parseFloat(item.quantity || 0) * parseFloat(item.unitPrice || 0)), 0);
 
-  const calculateSubtotal = () =>
-    items.reduce((sum, item) => sum + (parseFloat(item.quantity || 0) * parseFloat(item.unitPrice || 0)), 0);
+    const calculateDiscount = () => {
+        const subtotal = calculateSubtotal();
+        return subtotal > 5000 ? subtotal * 0.10 : 0;
+    };
 
-  const calculateDiscount = () => {
-    const subtotal = calculateSubtotal();
-    return subtotal > 5000 ? subtotal * 0.10 : 0;
-  };
+    const calculateTotal = () => (calculateSubtotal() - calculateDiscount()).toFixed(2);
 
-  const calculateTotal = () => (calculateSubtotal() - calculateDiscount()).toFixed(2);
+    const getPaymentStatus = (method) => {
+        if (method === 'credit') return 'Credit';
+        return 'Paid';
+    };
 
-  const getPaymentStatus = (method) => {
-    if (method === 'credit') return 'Credit';
-    return 'Paid';
-  };
-
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccessMessage('');
@@ -269,92 +231,77 @@ function Sales() {
     if (items.length === 0) { setError('Please add at least one item to cart.'); return; }
 
     for (const item of items) {
-      if (parseInt(item.quantity) > item.maxStock) {
+        if (parseInt(item.quantity) > item.maxStock) {
         setError(`Insufficient stock for ${item.partName}. Available: ${item.maxStock}`);
         return;
-      }
+        }
     }
 
     setLoading(true);
 
     try {
-      const token = localStorage.getItem('token');
-      const payloadToken = JSON.parse(atob(token.split('.')[1]));
-      const userId = parseInt(payloadToken.Id);
-      const staffMember = staffList.find(s => s.userId === userId);
-
-      if (!staffMember) {
-        setError('Staff record not found. Make sure you are logged in as staff.');
-        setLoading(false);
-        return;
-      }
-
-      const payload = {
+        // IMPORTANT: No staffId here - backend gets it from token
+        const payload = {
         customerId: selectedCustomer.id,
-        staffId: staffMember.id,
-        paymentStatus: getPaymentStatus(paymentMethod),
+        paymentStatus: paymentMethod === 'credit' ? 'Credit' : 'Paid',
         items: items.map(i => ({
-          partId: i.partId,
-          quantity: parseInt(i.quantity)
+            partId: i.partId,
+            quantity: parseInt(i.quantity)
         }))
-      };
+        };
 
-      const response = await api.post('/sale', payload);
+        const response = await api.post('/sale', payload);
 
-      const disc = response.data.discountApplied
-        ? ` — 10% loyalty discount of Rs. ${response.data.discountAmount} applied!`
-        : '';
-      setSuccessMessage(`✅ Sale #${response.data.id} created! Total: Rs. ${response.data.totalAmount}${disc}`);
-      setTimeout(() => setSuccessMessage(''), 6000);
+        setSuccessMessage(`✅ Sale #${response.data.id} created! Total: Rs. ${response.data.totalAmount}`);
+        setTimeout(() => setSuccessMessage(''), 5000);
 
-      resetForm();
-      await fetchSales();
-      await fetchParts();
+        resetForm();
+        await Promise.all([fetchSales(), fetchParts()]);
 
     } catch (err) {
-      console.error('Submit error:', err);
-      setError(err.response?.data?.message || 'Failed to create sale.');
+        console.error('Submit error:', err);
+        setError(err.response?.data?.message || 'Failed to create sale.');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+    };
+    
+    const resetForm = () => {
+        setSelectedCustomer(null);
+        setCustomerSearchTerm('');
+        setItems([]);
+        setShowForm(false);
+        setError('');
+        setSearchTerm('');
+        setSelectedVendor('all');
+        setPaymentMethod('cash');
+    };
 
-  const resetForm = () => {
-    setSelectedCustomer(null);
-    setCustomerSearchTerm('');
-    setItems([]);
-    setShowForm(false);
-    setError('');
-    setSearchTerm('');
-    setSelectedVendor('all');
-    setPaymentMethod('cash');
-  };
+    const getStockStatus = (stock) => {
+        if (stock <= 0) return 'out';
+        if (stock < 10) return 'low';
+        return 'good';
+    };
 
-  const getStockStatus = (stock) => {
-    if (stock <= 0) return 'out';
-    if (stock < 10) return 'low';
-    return 'good';
-  };
+    const getStockStatusText = (stock) => {
+        if (stock <= 0) return 'OUT OF STOCK';
+        if (stock < 10) return `Low Stock: ${stock}`;
+        return `In Stock: ${stock}`;
+    };
 
-  const getStockStatusText = (stock) => {
-    if (stock <= 0) return 'OUT OF STOCK';
-    if (stock < 10) return `Low Stock: ${stock}`;
-    return `In Stock: ${stock}`;
-  };
+    const partsByVendor = () => {
+        const grouped = {};
+        filteredParts.forEach(part => {
+        const vendorKey = part.vendorName || 'Unknown Vendor';
+        if (!grouped[vendorKey]) grouped[vendorKey] = [];
+        grouped[vendorKey].push(part);
+        });
+        return grouped;
+    };
 
-  const partsByVendor = () => {
-    const grouped = {};
-    filteredParts.forEach(part => {
-      const vendorKey = part.vendorName || 'Unknown Vendor';
-      if (!grouped[vendorKey]) grouped[vendorKey] = [];
-      grouped[vendorKey].push(part);
-    });
-    return grouped;
-  };
-
-  const subtotal = calculateSubtotal();
-  const discount = calculateDiscount();
-  const hasDiscount = discount > 0;
+    const subtotal = calculateSubtotal();
+    const discount = calculateDiscount();
+    const hasDiscount = discount > 0;
 
   return (
     <div className="sales-page">
@@ -362,15 +309,15 @@ function Sales() {
       <div className="sales-container">
 
         <div className="sales-header">
-          <div className="header-left">
-            <h1 className="header-title">Sales Counter</h1>
-            <p className="header-subtitle">Process customer sales and create invoices</p>
-          </div>
-          {!showForm && (
-            <button className="btn-primary" onClick={() => setShowForm(true)}>
-              <PlusIcon /> New Sale
-            </button>
-          )}
+            <div>
+                <h1 className="sales-title">SALES COUNTER</h1>
+                <p className="sales-subtitle">process customer sales & create invoices</p>
+            </div>
+            {!showForm && (
+                <button className="add-sale-btn" onClick={() => setShowForm(true)}>
+                + NEW SALE
+                </button>
+            )}
         </div>
 
         {successMessage && (
@@ -389,14 +336,12 @@ function Sales() {
 
         {showForm ? (
           <div className="pos-interface">
-
             {/* Products Panel */}
             <div className="products-panel">
               <div className="panel-header">
                 <h3 className="panel-title"><SearchIcon /> Products</h3>
                 <div className="search-wrapper">
                   <div className="search-input-wrapper">
-                    <span className="search-icon"><SearchIcon /></span>
                     <input
                       type="text"
                       className="search-input"
@@ -425,7 +370,6 @@ function Sales() {
                 {Object.entries(partsByVendor()).map(([vendorName, vendorParts]) => (
                   <div key={vendorName} className="vendor-group">
                     <div className="vendor-group-header">
-                      <VendorIcon />
                       <h4 className="vendor-name">{vendorName}</h4>
                     </div>
                     <div className="vendor-products">
@@ -459,9 +403,8 @@ function Sales() {
               </div>
             </div>
 
-            {/* Cart Panel */}
+            {/* Cart Panel - Keep this as is */}
             <div className="cart-panel">
-
               {/* Customer Section */}
               <div className="cart-section">
                 <h3 className="section-title"><UserIcon /> Customer</h3>
@@ -519,9 +462,6 @@ function Sales() {
                         <button className="qty-btn" onClick={() => updateQuantity(index, parseInt(item.quantity) + 1)}>
                           <PlusIcon />
                         </button>
-                        <button className="remove-btn" onClick={() => removeItem(index)}>
-                          <TrashIcon />
-                        </button>
                       </div>
                       <div className="cart-item-total">
                         Rs. {(parseInt(item.quantity) * item.unitPrice).toLocaleString()}
@@ -538,7 +478,7 @@ function Sales() {
                 </div>
               </div>
 
-              {/* Payment Method and Totals - Only show if items exist */}
+              {/* Payment Method and Totals */}
               {items.length > 0 && (
                 <>
                   <div className="cart-section payment-section">
@@ -613,69 +553,7 @@ function Sales() {
             </div>
           </div>
         ) : (
-          /* Sales History */
-          <div className="history-section">
-            <div className="history-header">
-              <h3 className="history-title"><HistoryIcon /> Sales History</h3>
-              <span className="history-count">{sales.length} records</span>
-            </div>
-            <div className="table-responsive">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Invoice</th>
-                    <th>Customer</th>
-                    <th>Staff</th>
-                    <th>Items</th>
-                    <th>Subtotal</th>
-                    <th>Discount</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {sales.map((sale, index) => (
-                    <tr key={sale.id}>
-                      <td>{index + 1}</td>
-                      <td className="invoice-id">#{sale.id}</td>
-                      <td>{sale.customerName}</td>
-                      <td style={{ color: '#888', fontSize: '11px' }}>{sale.staffName}</td>
-                      <td>
-                        {sale.items?.map((item, idx) => (
-                          <div key={idx} className="history-item">
-                            {item.partName} × {item.quantity}
-                          </div>
-                        ))}
-                      </td>
-                      <td style={{ color: '#bbb' }}>Rs. {sale.subTotal?.toLocaleString()}</td>
-                      <td>
-                        {sale.discountApplied
-                          ? <span style={{ color: '#2ecc71', fontSize: '11px' }}>- Rs. {sale.discountAmount?.toLocaleString()}</span>
-                          : <span style={{ color: '#444' }}>—</span>
-                        }
-                      </td>
-                      <td className="total-amount">Rs. {sale.totalAmount?.toLocaleString()}</td>
-                      <td>
-                        <span className={`status-badge status-${sale.paymentStatus?.toLowerCase()}`}>
-                          {sale.paymentStatus}
-                        </span>
-                      </td>
-                      <td style={{ color: '#888', fontSize: '11px' }}>
-                        {new Date(sale.date).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                  {sales.length === 0 && !loading && (
-                    <tr>
-                      <td colSpan="10" className="empty-table">No sales records found</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <SalesHistory sales={sales} loading={loading} />
         )}
       </div>
     </div>
