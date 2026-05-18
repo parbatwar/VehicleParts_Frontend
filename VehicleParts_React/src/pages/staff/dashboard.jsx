@@ -1,14 +1,10 @@
 import { useNavigate } from 'react-router-dom'
+import StaffNavbar from '../../components/StaffNavbar'
 import './StaffDashboard.css'
 
 function StaffDashboard() {
   const navigate = useNavigate()
   const fullName = localStorage.getItem('fullName')
-
-  const handleLogout = () => {
-    localStorage.clear()
-    navigate('/')
-  }
 
   const features = [
     {
@@ -31,11 +27,19 @@ function StaffDashboard() {
       desc: 'View complete customer purchase history, vehicle information, and service records.',
       btn: 'View History',
       path: '/staff/customers'
+    },
+    {
+      icon: '💰',
+      title: 'Sales',
+      desc: 'Process customer sales, create invoices, and manage transactions.',
+      btn: 'New Sale',
+      path: '/staff/sales'
     }
   ]
 
   return (
-    <div className="dashboard-container">
+    <div className="staff-dashboard-wrapper">
+      <StaffNavbar />
 
       {/* Video Background */}
       <div className="video-background">
@@ -44,19 +48,6 @@ function StaffDashboard() {
         </video>
       </div>
       <div className="video-overlay" />
-
-      {/* Top Navbar */}
-      <div className="dashboard-navbar">
-        <img 
-            src="/GearUpCropped.png" 
-            alt="Vehicle Parts Logo" 
-            className="dashboard-logo-img" 
-        />
-        <div className="navbar-right">
-          <span className="navbar-user">👤 {fullName}</span>
-          <button className="dashboard-logout-btn" onClick={handleLogout}>LOGOUT</button>
-        </div>
-      </div>
 
       {/* Main Content */}
       <div className="dashboard-main">

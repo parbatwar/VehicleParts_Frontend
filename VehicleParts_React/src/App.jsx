@@ -16,6 +16,7 @@ import About from './pages/customer/About';
 import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
 import PurchaseInvoicesPage from './pages/admin/Purchase'
+import Sales from './pages/staff/Sales';
 
 function App() {
   return (
@@ -60,6 +61,12 @@ function App() {
           <ProtectedRoute allowedRole="Staff">
             <Customers />
           </ProtectedRoute>
+        } />
+
+        <Route path="/staff/sales" element={
+        <ProtectedRoute allowedRole="Staff">
+            <Sales />
+        </ProtectedRoute>
         } />
 
 

@@ -24,14 +24,15 @@ function StaffNavbar() {
   const navItems = [
     { label: 'DASHBOARD', path: '/staff/dashboard' },
     { label: 'CUSTOMERS', path: '/staff/customers' },
+    { label: 'SALES', path: '/staff/sales' },
   ];
 
   return (
     <nav className="staff-nav">
       {/* Left: Logo */}
       <div className="brand-container">
-        <Link to="/staff/dashboard" style={{ display: 'flex', alignItems: 'center' }}>
-          <img src="/GearUpCropped.png" alt="GearUp Logo" className="nav-logo" />
+        <Link to="/customer/dashboard" style={{ display: 'flex', alignItems: 'center' }}>
+          <img src="/GearUp.png" alt="GearUp Logo" className="nav-logo" />
         </Link>
       </div>
 
