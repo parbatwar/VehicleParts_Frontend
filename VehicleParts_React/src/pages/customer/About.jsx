@@ -26,7 +26,7 @@ const About = () => {
                     {/* Features Layout */}
                     <div className="features-grid">
                         <div className="about-card">
-                            <h3>🔧 Genuine Parts</h3>
+                            <h3>Genuine Parts</h3>
                             <p>We source our inventory directly from trusted manufacturers to ensure reliability and performance. If it's not in stock, just request it via your dashboard!</p>
                         </div>
                         

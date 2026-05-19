@@ -1,15 +1,17 @@
-// FILE: src/pages/customer/Vehicles.jsx
 import React, { useState, useEffect } from 'react';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import api from '../../api/axios';
 import CustomerNavbar from '../../components/CustomerNavbar';
-import './Vehicles.css'; 
+import './Vehicles.css';
 
 const Vehicles = () => {
     const [vehicles, setVehicles] = useState([]);
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
     const [editingId, setEditingId] = useState(null);
+    const [showForm, setShowForm] = useState(false);
+    const [loading, setLoading] = useState(false);
     
-    // Form State
     const [formData, setFormData] = useState({
         brand: '',
         model: '',
@@ -17,13 +19,15 @@ const Vehicles = () => {
         plateNumber: ''
     });
 
-    // Fetch vehicles on load
     const fetchVehicles = async () => {
+        setLoading(true);
         try {
             const response = await api.get('/Customer/vehicles');
             setVehicles(response.data);
-        } catch (error) {
-            console.error("Error fetching vehicles:", error);
+        } catch (err) {
+            console.error("Error fetching vehicles:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -31,31 +35,34 @@ const Vehicles = () => {
         fetchVehicles();
     }, []);
 
-    // Handle Add or Update
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setMessage('');
+        setError('');
+        setLoading(true);
+        
         try {
-            // Ensure year is sent as an integer
             const payload = { ...formData, year: parseInt(formData.year) };
 
             if (editingId) {
                 await api.put(`/Customer/vehicles/${editingId}`, payload);
-                setMessage('✅ Vehicle updated successfully!');
+                setMessage('Vehicle updated successfully!');
             } else {
                 await api.post('/Customer/vehicles', payload);
-                setMessage('✅ Vehicle added successfully!');
+                setMessage('Vehicle added successfully!');
             }
 
-            // Reset form and refresh list
             setFormData({ brand: '', model: '', year: '', plateNumber: '' });
             setEditingId(null);
+            setShowForm(false);
             fetchVehicles();
-        } catch (error) {
-            setMessage(`❌ Error: ${error.response?.data?.error || error.message}`);
+        } catch (err) {
+            setError(err.response?.data?.error || err.message || 'Something went wrong');
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Populate form for editing
     const handleEdit = (vehicle) => {
         setFormData({
             brand: vehicle.brand,
@@ -64,101 +71,156 @@ const Vehicles = () => {
             plateNumber: vehicle.plateNumber
         });
         setEditingId(vehicle.id);
-        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll up to the form
+        setShowForm(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // Delete a vehicle
     const handleDelete = async (id) => {
         if (!window.confirm('Are you sure you want to remove this vehicle?')) return;
         
+        setLoading(true);
         try {
             await api.delete(`/Customer/vehicles/${id}`);
-            setMessage('🗑️ Vehicle removed successfully!');
+            setMessage('Vehicle removed successfully!');
             fetchVehicles();
-        } catch (error) {
-            setMessage(`❌ Error: ${error.response?.data?.error || error.message}`);
+        } catch (err) {
+            setError(err.response?.data?.error || err.message || 'Failed to delete');
+        } finally {
+            setLoading(false);
         }
+    };
+
+    const resetForm = () => {
+        setFormData({ brand: '', model: '', year: '', plateNumber: '' });
+        setEditingId(null);
+        setShowForm(false);
+        setMessage('');
+        setError('');
     };
 
     return (
         <div className="vehicles-page">
             <CustomerNavbar />
-            <div className="container mt-4">
-                <h2>Manage My Vehicles</h2>
-                {message && <div className="alert alert-info">{message}</div>}
+            
+            <div className="vehicles-container">
+                <div className="vehicles-header">
+                    <div>
+                        <h1 className="vehicles-title">MY VEHICLES</h1>
+                        <p className="vehicles-subtitle">manage your registered vehicles</p>
+                    </div>
+                    {!showForm && (
+                        <button className="add-vehicle-btn" onClick={() => setShowForm(true)}>
+                            <Plus size={16} /> ADD VEHICLE
+                        </button>
+                    )}
+                </div>
 
-                <div className="row mt-4">
-                    {/* ADD / EDIT FORM */}
-                    <div className="col-md-4 mb-4">
-                        <div className="card shadow-sm p-4">
-                            <h3>{editingId ? 'Edit Vehicle' : 'Add New Vehicle'}</h3>
+                {message && (
+                    <div className="success-message">
+                        <span>{message}</span>
+                        <button onClick={() => setMessage('')}>×</button>
+                    </div>
+                )}
+
+                {error && (
+                    <div className="error-message">
+                        <span>{error}</span>
+                        <button onClick={() => setError('')}>×</button>
+                    </div>
+                )}
+
+                {/* Add/Edit Form Modal */}
+                {showForm && (
+                    <div className="modal-overlay" onClick={resetForm}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="modal-header">
+                                <h3>{editingId ? 'EDIT VEHICLE' : 'ADD VEHICLE'}</h3>
+                                <button className="modal-close" onClick={resetForm}>×</button>
+                            </div>
                             <form onSubmit={handleSubmit}>
-                                <div className="form-group mb-3">
-                                    <label>Brand (Make)</label>
-                                    <input type="text" className="form-control" placeholder="e.g., Kia" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})} required />
+                                <div className="form-grid">
+                                    <div className="input-group">
+                                        <label className="input-label">BRAND</label>
+                                        <input
+                                            type="text"
+                                            value={formData.brand}
+                                            onChange={(e) => setFormData({...formData, brand: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label className="input-label">MODEL</label>
+                                        <input
+                                            type="text"
+                                            value={formData.model}
+                                            onChange={(e) => setFormData({...formData, model: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label className="input-label">YEAR</label>
+                                        <input
+                                            type="number"
+                                            value={formData.year}
+                                            onChange={(e) => setFormData({...formData, year: e.target.value})}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="input-group">
+                                        <label className="input-label">PLATE NUMBER</label>
+                                        <input
+                                            type="text"
+                                            value={formData.plateNumber}
+                                            onChange={(e) => setFormData({...formData, plateNumber: e.target.value})}
+                                            required
+                                        />
+                                    </div>
                                 </div>
-                                <div className="form-group mb-3">
-                                    <label>Model</label>
-                                    <input type="text" className="form-control" placeholder="e.g., Sonet" value={formData.model} onChange={(e) => setFormData({...formData, model: e.target.value})} required />
-                                </div>
-                                <div className="form-group mb-3">
-                                    <label>Manufacture Year</label>
-                                    <input type="number" className="form-control" placeholder="e.g., 2022" value={formData.year} onChange={(e) => setFormData({...formData, year: e.target.value})} required />
-                                </div>
-                                <div className="form-group mb-4">
-                                    <label>License Plate</label>
-                                    <input type="text" className="form-control" placeholder="e.g., BA 1 PA 1234" value={formData.plateNumber} onChange={(e) => setFormData({...formData, plateNumber: e.target.value})} required />
-                                </div>
-                                <button type="submit" className={`btn w-100 ${editingId ? 'btn-warning' : 'btn-primary'}`}>
-                                    {editingId ? 'Update Vehicle' : 'Add Vehicle'}
-                                </button>
-                                {editingId && (
-                                    <button type="button" className="btn btn-light w-100 mt-2" onClick={() => { setEditingId(null); setFormData({ brand: '', model: '', year: '', plateNumber: '' }); }}>
-                                        Cancel Edit
+                                <div className="modal-actions">
+                                    <button type="button" className="btn-cancel" onClick={resetForm}>CANCEL</button>
+                                    <button type="submit" className="btn-submit">
+                                        {editingId ? 'UPDATE VEHICLE' : 'ADD VEHICLE'}
                                     </button>
-                                )}
+                                </div>
                             </form>
                         </div>
                     </div>
+                )}
 
-                    {/* VEHICLE LIST */}
-                    <div className="col-md-8">
-                        <div className="card shadow-sm p-4 h-100">
-                            <h3>My Garage</h3>
-                            {vehicles.length === 0 ? (
-                                <p className="text-muted">You haven't added any vehicles yet. Add one to book an appointment!</p>
-                            ) : (
-                                <div className="table-responsive">
-                                    <table className="table table-hover align-middle">
-                                        <thead className="table-light">
-                                            <tr>
-                                                <th>Brand</th>
-                                                <th>Model</th>
-                                                <th>Year</th>
-                                                <th>Plate No.</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {vehicles.map(v => (
-                                                <tr key={v.id}>
-                                                    <td><strong>{v.brand}</strong></td>
-                                                    <td>{v.model}</td>
-                                                    <td>{v.year}</td>
-                                                    <td><span className="badge bg-secondary">{v.plateNumber}</span></td>
-                                                    <td>
-                                                        <button className="btn btn-sm btn-outline-primary me-2" onClick={() => handleEdit(v)}>Edit</button>
-                                                        <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(v.id)}>Delete</button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            )}
-                        </div>
+                {/* Vehicles List */}
+                {loading ? (
+                    <div className="loader-container">
+                        <div className="loader"></div>
+                        <p className="loader-text">LOADING VEHICLES...</p>
                     </div>
-                </div>
+                ) : vehicles.length === 0 ? (
+                    <div className="empty-state">
+                        <p>No vehicles found.</p>
+                    </div>
+                ) : (
+                    <div className="vehicles-list">
+                        {vehicles.map((vehicle, index) => (
+                            <div key={vehicle.id} className="vehicle-item">
+                                <div className="vehicle-info">
+                                    <span className="vehicle-number">{index + 1}.</span>
+                                    <div className="vehicle-details">
+                                        <span className="vehicle-name">{vehicle.brand} {vehicle.model}</span>
+                                        <span className="vehicle-year">{vehicle.year}</span>
+                                        <span className="vehicle-plate">{vehicle.plateNumber}</span>
+                                    </div>
+                                </div>
+                                <div className="vehicle-actions">
+                                    <button className="edit-btn" onClick={() => handleEdit(vehicle)}>
+                                        <Pencil size={14} /> EDIT
+                                    </button>
+                                    <button className="delete-btn" onClick={() => handleDelete(vehicle.id)}>
+                                        <Trash2 size={14} /> DELETE
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
