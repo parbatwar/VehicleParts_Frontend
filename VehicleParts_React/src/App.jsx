@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Login from './pages/login'
-import AdminDashboard from './pages/admin/dashboard'
+import AdminDashboard from './pages/admin/Dashboard'
 import VendorPage from './pages/admin/Vendors'
 import StaffPage from './pages/admin/Staff'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -17,6 +17,8 @@ import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
 import PurchaseInvoicesPage from './pages/admin/Purchase'
 import Sales from './pages/staff/Sales';
+import NotificationsPage from './pages/admin/Notifications';
+
 
 function App() {
   return (
@@ -49,6 +51,12 @@ function App() {
         <ProtectedRoute allowedRole="Admin">
             <PurchaseInvoicesPage />
         </ProtectedRoute>
+        } />
+
+        <Route path="/admin/notifications" element={
+            <ProtectedRoute allowedRole="Admin">
+                <NotificationsPage />
+            </ProtectedRoute>
         } />
 
         {/* Staff Protected Routes */}

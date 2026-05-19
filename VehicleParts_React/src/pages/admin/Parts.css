@@ -131,9 +131,11 @@
   border-color: #f39c12;
 }
 
-.part-chip-disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.part-chip-added {
+  border-color: #f39c12;
+  color: #f39c12;
+  cursor: pointer;
+  opacity: 1;   
 }
 
 .new-part-btn {
@@ -393,6 +395,12 @@
   position: relative;
   margin-top: 8px;
   animation: loading 1s infinite linear;
+}
+
+.added-quantity {
+  font-size: 10px;
+  color: #2ecc71;
+  margin-left: 6px;
 }
 
 @keyframes loading {

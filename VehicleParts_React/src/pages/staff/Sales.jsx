@@ -173,7 +173,7 @@ function Sales() {
             setTimeout(() => setError(''), 3000);
             return;
         }
-        setItems(items.map(i => i.partId === part.id ? { ...i, quantity: newQuantity.toString() } : i));
+        setItems(items.map(i => i.partId === part.id ? { ...i, quantity: newQuantity.toString(), unitPrice: part.sellingPrice } : i));
         } else {
         if (part.stockQty < 1) {
             setError(`${part.name} is out of stock.`);
@@ -185,7 +185,7 @@ function Sales() {
             partName: part.name,
             vendorName: part.vendorName || 'Unknown Vendor',
             quantity: '1',
-            unitPrice: part.unitPrice,
+            unitPrice: part.sellingPrice,
             stockQty: part.stockQty,
             maxStock: part.stockQty
         }]);
@@ -386,7 +386,7 @@ function Sales() {
                             <div className="product-info">
                               <div className="product-name">{part.name}</div>
                               <div className="product-category">{part.category}</div>
-                              <div className="product-price">Rs. {part.unitPrice.toLocaleString()}</div>
+                              <div className="product-price">Rs. {part.sellingPrice?.toLocaleString() || part.unitPrice?.toLocaleString()}</div>
                             </div>
                             <div className={`product-stock stock-${stockStatus}`}>
                               {getStockStatusText(part.stockQty)}

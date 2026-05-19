@@ -18,25 +18,32 @@ function Parts() {
   const [selectedVendor, setSelectedVendor] = useState('');
   const [items, setItems] = useState([]);
 
-  const [form, setForm] = useState({ name: '', category: '' });
+const [form, setForm] = useState({ 
+  name: '', 
+  category: '',
+  sellingPrice: ''
+});
 
   useEffect(() => {
     fetchParts();
     fetchVendors();
   }, []);
 
-  const fetchParts = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/part');
-      setParts(res.data);
-      setError('');
-    } catch (err) {
-      setError('CONNECTION ERROR: DATABASE OFFLINE');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchParts = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get('/part', {
+                params: { _t: new Date().getTime() }
+            });
+            console.log('Parts from API:', res.data); // ADD THIS
+            setParts(res.data);
+            setError('');
+        } catch (err) {
+            setError('CONNECTION ERROR: DATABASE OFFLINE');
+        } finally {
+            setLoading(false);
+        }
+    };
 
   const fetchVendors = async () => {
     try {
@@ -60,18 +67,30 @@ function Parts() {
     }
   };
 
-  const addExistingPart = (part) => {
-    if (items.find(i => i.partId === part.id)) return;
-    setItems([...items, {
-      partId: part.id,
-      partName: part.name,
-      category: part.category,
-      currentStock: part.stockQty,
-      quantity: '',
-      unitPrice: part.unitPrice,
-      isNew: false
-    }]);
-  };
+    const addExistingPart = (part) => {
+        // Check if item already exists in cart
+        const existingIndex = items.findIndex(i => i.partId === part.id);
+        
+        if (existingIndex !== -1) {
+            // If exists, increase quantity by 1
+            const updated = [...items];
+            const currentQty = parseInt(updated[existingIndex].quantity) || 0;
+            updated[existingIndex].quantity = (currentQty + 1).toString();
+            setItems(updated);
+        } else {
+            // If not exists, add new item
+            setItems([...items, {
+            partId: part.id,
+            partName: part.name,
+            category: part.category,
+            currentStock: part.stockQty,
+            quantity: '1',
+            unitPrice: part.unitPrice,
+            sellingPrice: part.sellingPrice,
+            isNew: false
+            }]);
+        }
+    };
 
   const addNewPart = () => {
     setItems([...items, {
@@ -81,6 +100,7 @@ function Parts() {
       currentStock: null,
       quantity: '',
       unitPrice: '',
+      sellingPrice: '',
       isNew: true
     }]);
   };
@@ -114,14 +134,15 @@ function Parts() {
           partName: i.isNew ? i.partName : null,
           category: i.isNew ? i.category : null,
           quantity: parseInt(i.quantity),
-          unitPrice: parseFloat(i.unitPrice)
+          unitPrice: parseFloat(i.unitPrice),
+          sellingPrice: parseFloat(i.sellingPrice) || 0
         }))
       };
       await api.post('/purchaseinvoice', payload);
       resetPurchaseForm();
       await fetchParts();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create invoice.');
+        setError(err.response?.data?.message || 'Failed to create invoice.');
     } finally {
       setLoading(false);
     }
@@ -136,30 +157,46 @@ function Parts() {
 
   const handleEdit = (part) => {
     setEditingPart(part);
-    setForm({ name: part.name, category: part.category });
+    setForm({ 
+        name: part.name, 
+        category: part.category,
+        sellingPrice: part.sellingPrice || part.unitPrice * 1.3  // ← ADD THIS
+    });
     setShowPurchaseForm(true);
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await api.put(`/part/${editingPart.id}`, {
-        name: form.name,
-        category: form.category,
-        unitPrice: editingPart.unitPrice,
-        stockQty: editingPart.stockQty,
-        vendorId: editingPart.vendorId
-      });
-      setEditingPart(null);
-      setShowPurchaseForm(false);
-      await fetchParts();
-    } catch (err) {
-      setError('Failed to update part.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            await api.put(`/part/${editingPart.id}`, {
+            name: form.name,
+            category: form.category,
+            unitPrice: editingPart.unitPrice,
+            sellingPrice: parseFloat(form.sellingPrice),
+            stockQty: editingPart.stockQty,
+            vendorId: editingPart.vendorId
+            });
+            
+            // Update local state immediately
+            setParts(prevParts => 
+            prevParts.map(part => 
+                part.id === editingPart.id 
+                ? { ...part, sellingPrice: parseFloat(form.sellingPrice) }
+                : part
+            )
+            );
+            
+            setEditingPart(null);
+            setShowPurchaseForm(false);
+            
+        } catch (err) {
+            console.error('Update error:', err);
+            setError('Failed to update part.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
   const handleConfirmDelete = async () => {
     try {
@@ -219,6 +256,17 @@ function Parts() {
                     required 
                   />
                 </div>
+                <div className="input-group" style={{ marginTop: '16px' }}>  {/* ← ADD THIS */}
+                    <label className="input-label">SELLING PRICE</label>
+                    <input 
+                        type="number"
+                        step="0.01"
+                        className="form-input" 
+                        value={form.sellingPrice} 
+                        onChange={e => setForm({...form, sellingPrice: e.target.value})} 
+                        required 
+                    />
+                </div>
                 <button type="submit" className="submit-btn" style={{ marginTop: '24px' }}>
                   {loading ? 'SAVING...' : 'UPDATE PART'}
                 </button>
@@ -248,16 +296,17 @@ function Parts() {
                       <label className="input-label">AVAILABLE PARTS</label>
                       <div className="parts-list">
                         {vendorParts.map(p => {
-                          const isAdded = items.find(i => i.partId === p.id);
-                          return (
-                            <div 
-                              key={p.id} 
-                              className={`part-chip ${isAdded ? 'part-chip-disabled' : ''}`} 
-                              onClick={() => !isAdded && addExistingPart(p)}
-                            >
-                              {p.name}
-                            </div>
-                          );
+                            const isAdded = items.find(i => i.partId === p.id);
+                            return (
+                                <div 
+                                key={p.id} 
+                                className={`part-chip ${isAdded ? 'part-chip-added' : ''}`}  // change class name
+                                onClick={() => addExistingPart(p)}  // always clickable
+                                >
+                                {p.name}
+                                {isAdded && <span className="added-quantity"> (×{isAdded.quantity})</span>}
+                                </div>
+                            );
                         })}
                         <button type="button" onClick={addNewPart} className="new-part-btn">
                           + NEW PART
@@ -282,7 +331,7 @@ function Parts() {
                             </div>
 
                             {item.isNew ? (
-                              <div className="grid-2">
+                              <div className="grid-3"> 
                                 <input 
                                   placeholder="Part Name" 
                                   className="form-input" 
@@ -296,6 +345,13 @@ function Parts() {
                                   value={item.category} 
                                   onChange={e => handleItemChange(index, 'category', e.target.value)} 
                                   required 
+                                />
+                                <input 
+                                    placeholder="Selling Price" 
+                                    className="form-input" 
+                                    value={item.sellingPrice} 
+                                    onChange={e => handleItemChange(index, 'sellingPrice', e.target.value)} 
+                                    required 
                                 />
                               </div>
                             ) : (
@@ -316,7 +372,7 @@ function Parts() {
                                 />
                               </div>
                               <div className="input-group">
-                                <label className="input-label-small">UNIT PRICE</label>
+                                <label className="input-label-small">PURCHASE  PRICE</label>
                                 <input 
                                   type="number" 
                                   className="form-input" 
@@ -386,7 +442,8 @@ function Parts() {
                 <th style={styles.th}>PART NAME</th>
                 <th style={styles.th}>CATEGORY</th>
                 <th style={styles.th}>VENDOR</th>
-                <th style={styles.th}>UNIT PRICE</th>
+                <th style={styles.th}>PURCHASE PRICE</th>
+                <th style={styles.th}>SELLING PRICE</th>
                 <th style={styles.th}>STOCK</th>
                 <th style={styles.th}>ACTIONS</th>
               </tr>
@@ -394,25 +451,28 @@ function Parts() {
             <tbody>
               {parts.map((p, index) => (
                 <tr key={p.id} style={styles.tr} className="part-row">
-                  <td style={styles.td}>{index + 1}</td>
-                  <td style={{...styles.td, color: '#f39c12'}}>{p.name}</td>
-                  <td style={styles.td}>{p.category}</td>
-                  <td style={styles.td}>{p.vendorName}</td>
-                  <td style={styles.td}>Rs. {p.unitPrice}</td>
-                  <td style={styles.td}>
-                    <span className="stock-badge" style={{
-                      backgroundColor: p.stockQty <= 10 ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)',
-                      color: p.stockQty <= 10 ? '#e74c3c' : '#2ecc71'
-                    }}>
-                      {p.stockQty}
-                    </span>
-                  </td>
-                  <td style={styles.tdRight}>
-                    <div style={styles.actionGroup}>
-                      <button onClick={() => handleEdit(p)} style={styles.editBtn} className="edit-h">EDIT</button>
-                      <button onClick={() => setPartToDelete(p.id)} style={styles.deleteBtn} className="del-h">DELETE</button>
-                    </div>
-                  </td>
+                    <td style={styles.td}>{index + 1}</td>
+                    <td style={{...styles.td, color: '#f39c12'}}>{p.name}</td>
+                    <td style={styles.td}>{p.category}</td>
+                    <td style={styles.td}>{p.vendorName}</td>
+                    <td style={styles.td}>Rs. {p.unitPrice}</td>
+                    <td style={{...styles.td, color: '#2ecc71'}}>
+                        Rs. {(p.sellingPrice && p.sellingPrice > 0) ? p.sellingPrice.toLocaleString() : (p.unitPrice * 1.3).toLocaleString()}
+                    </td>
+                    <td style={styles.td}>
+                        <span className="stock-badge" style={{
+                        backgroundColor: p.stockQty <= 10 ? 'rgba(231, 76, 60, 0.2)' : 'rgba(46, 204, 113, 0.2)',
+                        color: p.stockQty <= 10 ? '#e74c3c' : '#2ecc71'
+                        }}>
+                        {p.stockQty}
+                        </span>
+                    </td>
+                    <td style={styles.tdRight}>
+                        <div style={styles.actionGroup}>
+                            <button onClick={() => handleEdit(p)} style={styles.editBtn} className="edit-h">EDIT</button>
+                            <button onClick={() => setPartToDelete(p.id)} style={styles.deleteBtn} className="del-h">DELETE</button>
+                        </div>
+                    </td>
                 </tr>
               ))}
               {parts.length === 0 && !loading && (
