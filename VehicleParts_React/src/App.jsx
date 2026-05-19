@@ -17,6 +17,7 @@ import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
 import PurchaseInvoicesPage from './pages/admin/Purchase'
 import Sales from './pages/staff/Sales';
+import CustomerProfile from './pages/staff/CustomerProfile';
 
 function App() {
   return (
@@ -106,6 +107,13 @@ function App() {
             <History />
           </ProtectedRoute>
         } />
+        <Route path="/staff/customers/:id" element={
+          <ProtectedRoute allowedRole="Staff">
+            <CustomerProfile />
+          </ProtectedRoute>
+        } />
+        
+        
       </Routes>
     </BrowserRouter>
   )
