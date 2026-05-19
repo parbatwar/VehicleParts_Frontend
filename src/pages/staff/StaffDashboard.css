@@ -1,0 +1,52 @@
+.staff-dashboard-viewport {
+  min-height: 100vh;
+  background-color: #0b111e;
+  color: #f3f4f6;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+.dashboard-header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 1rem;
+}
+.dashboard-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: #fff;
+}
+.dashboard-nav-group {
+  display: flex;
+  gap: 1rem;
+}
+.dashboard-nav-btn {
+  padding: 0.6rem 1.2rem;
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dashboard-sec-btn {
+  padding: 0.6rem 1.2rem;
+  background-color: #1f2937;
+  color: #fff;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dashboard-metrics-grid-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+.grid-span-full {
+  grid-column: 1 / -1;
+}
