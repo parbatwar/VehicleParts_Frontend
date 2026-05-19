@@ -8,12 +8,12 @@ import Customers from './pages/staff/Customers'
 import StaffDashboard from './pages/staff/dashboard'
 import Profile from './pages/customer/Profile';
 import Vehicles from './pages/customer/Vehicles';
-import Interactions from './pages/customer/Interactions';
+// import Interactions from './pages/customer/Interactions';
+import Services from './pages/customer/Services';
 import History from './pages/customer/History';
 import Register from './pages/customer/Register'
 import CustomerDashboard from './pages/customer/dashboard'; 
 import About from './pages/customer/About';
-import Services from './pages/customer/Services';
 import PartsPage from './pages/admin/Parts'
 import PurchaseInvoicesPage from './pages/admin/Purchase'
 import Sales from './pages/staff/Sales';
@@ -85,11 +85,6 @@ function App() {
             <CustomerDashboard />
           </ProtectedRoute>
         } />
-        <Route path="/customer/services" element={
-          <ProtectedRoute allowedRole="Customer">
-            <Services />
-          </ProtectedRoute>
-        } />
         <Route path="/customer/about" element={
           <ProtectedRoute allowedRole="Customer">
             <About />
@@ -105,10 +100,10 @@ function App() {
             <Vehicles />
           </ProtectedRoute>
         } />
-        <Route path="/customer/interactions" element={
-          <ProtectedRoute allowedRole="Customer">
-            <Interactions />
-          </ProtectedRoute>
+        <Route path="/customer/services" element={
+            <ProtectedRoute allowedRole="Customer">
+                <Services />
+            </ProtectedRoute>
         } />
         <Route path="/customer/history" element={
           <ProtectedRoute allowedRole="Customer">

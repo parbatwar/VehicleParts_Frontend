@@ -33,8 +33,21 @@ const History = () => {
         fetchHistory();
     }, []);
 
-    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
-    if (error) return <div className="error">{error}</div>;
+    if (loading) return (
+        <div className="history-page">
+            <CustomerNavbar />
+            <div className="loader-container">
+                <div className="loader"></div>
+            </div>
+        </div>
+    );
+        
+    if (error) return (
+        <div className="history-page">
+            <CustomerNavbar />
+            <div className="error">{error}</div>
+        </div>
+    );
 
     return (
         <div className="history-page">

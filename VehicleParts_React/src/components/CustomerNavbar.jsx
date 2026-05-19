@@ -34,7 +34,7 @@ function CustomerNavbar() {
   const navItems = [
     { label: 'HOME', path: '/customer/dashboard' },
     { label: 'MY VEHICLES', path: '/customer/vehicles' },
-    { label: 'SERVICES', path: '/customer/interactions' },
+    { label: 'SERVICES', path: '/customer/services' }, 
     { label: 'VIEW HISTORY', path: '/customer/history' },
     { label: 'ABOUT US', path: '/customer/about' },
   ];
