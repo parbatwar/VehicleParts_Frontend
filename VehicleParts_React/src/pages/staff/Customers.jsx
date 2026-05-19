@@ -105,6 +105,12 @@ function Customers() {
           <div className="more-vehicles">+{c.vehicles.length - 1} more vehicle(s)</div>
         )}
       </div>
+      <button
+        className="view-profile-btn"
+        onClick={() => navigate(`/staff/customers/${c.id}`)}
+      >
+        View Profile →
+      </button>
     </div>
   )
 
