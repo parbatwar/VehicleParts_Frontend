@@ -1,0 +1,97 @@
+.customer-profile-page {
+  min-height: 100vh;
+  background-color: #0b111e;
+  color: #f3f4f6;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+.profile-back-btn {
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #374151;
+  color: #9ca3af;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
+}
+.status-banner {
+  padding: 1rem;
+  background: #1e3a8a;
+  color: #93c5fd;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+.profile-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 2rem;
+  align-items: start;
+}
+.profile-card {
+  background-color: #111827;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.profile-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.profile-form-group {
+  margin-bottom: 1rem;
+}
+.profile-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 0.4rem;
+}
+.profile-input {
+  width: 100%;
+  padding: 0.65rem;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  color: #fff;
+  box-sizing: border-box;
+}
+.profile-submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #10b981;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.profile-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.profile-th {
+  text-align: left;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  padding: 0.5rem;
+  border-bottom: 1px solid #374151;
+  text-transform: uppercase;
+}
+.profile-td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #1f2937;
+  font-size: 0.9rem;
+}
+.license-badge {
+  font-family: monospace;
+  background: #1f2937;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
