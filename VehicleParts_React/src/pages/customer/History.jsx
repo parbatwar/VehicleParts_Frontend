@@ -1,131 +1,102 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../api/axios';
-import './History.css';
 import CustomerNavbar from '../../components/CustomerNavbar';
+import './History.css';
 
 const History = () => {
-    const [history, setHistory] = useState({ serviceHistory: [], purchaseHistory: [] });
+    const [history, setHistory] = useState({
+        serviceHistory: [],
+        purchaseHistory: [],
+        partRequestHistory: [] 
+    });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchHistory = async () => {
             try {
-                // Feature 14 API Call
                 const response = await api.get('/CustomerInteraction/history');
-                setHistory(response.data);
-            } catch (error) {
-                console.error("Failed to fetch history", error);
+                const actualData = response.data.data ? response.data.data : response.data;
+                
+                setHistory({
+                    serviceHistory: actualData.serviceHistory || [],
+                    purchaseHistory: actualData.purchaseHistory || [],
+                    partRequestHistory: actualData.partRequestHistory || []
+                });
+            } catch (err) {
+                console.error("Fetch history error:", err);
+                setError('Failed to load history.');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchHistory();
     }, []);
 
-    // Helper to format ISO dates to readable format
-    const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
-    };
-
-    // Helper to assign CSS classes based on status string
-    const getBadgeClass = (status) => {
-        const s = status?.toLowerCase() || '';
-        if (s === 'pending') return 'status-badge status-pending';
-        if (s === 'completed') return 'status-badge status-completed';
-        if (s === 'paid') return 'status-badge status-paid';
-        if (s === 'cancelled' || s === 'unpaid') return 'status-badge status-cancelled';
-        return 'status-badge status-default';
-    };
+    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
+    if (error) return <div className="error">{error}</div>;
 
     return (
-        <>
+        <div className="history-page">
             <CustomerNavbar />
-            <div className="history-wrapper">
-                <div className="history-container">
-                    {loading ? (
-                        <div className="loader-container">
-                            <div className="loader"></div>
-                            <p className="loader-text">LOADING HISTORY...</p>
-                        </div>
+            <div className="history-container">
+                <h2>My History</h2>
+
+                {/* Service History */}
+                <section>
+                    <h3>Service Appointments</h3>
+                    {!history?.serviceHistory || history.serviceHistory.length === 0 ? (
+                        <p className="empty-state">No service appointments booked yet.</p>
                     ) : (
-                        <>
-                            <div className="history-header">
-                                <h2 className="history-title">MY HISTORY DASHBOARD</h2>
-                                <p className="history-subtitle">view your service & purchase records</p>
-                            </div>
-
-                            {/* Service History Section */}
-                            <div className="history-section">
-                                <h3 className="section-title">SERVICE APPOINTMENTS</h3>
-                                {history.serviceHistory.length > 0 ? (
-                                    <table className="history-table">
-                                        <thead>
-                                            <tr>
-                                                <th>DATE & TIME</th>
-                                                <th>VEHICLE ID</th>
-                                                <th>NOTES</th>
-                                                <th>STATUS</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {history.serviceHistory.map(service => (
-                                                <tr key={service.id}>
-                                                    <td>{formatDate(service.date)}</td>
-                                                    <td>{service.vehicleId}</td>
-                                                    <td>{service.notes || 'No notes provided'}</td>
-                                                    <td>
-                                                        <span className={getBadgeClass(service.status)}>
-                                                            {service.status}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <div className="empty-state">You have no past service appointments.</div>
-                                )}
-                            </div>
-
-                            {/* Purchase History Section */}
-                            <div className="history-section">
-                                <h3 className="section-title">PURCHASES & INVOICES</h3>
-                                {history.purchaseHistory.length > 0 ? (
-                                    <table className="history-table">
-                                        <thead>
-                                            <tr>
-                                                <th>INVOICE ID</th>
-                                                <th>DATE</th>
-                                                <th>TOTAL AMOUNT</th>
-                                                <th>PAYMENT STATUS</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {history.purchaseHistory.map(purchase => (
-                                                <tr key={purchase.id}>
-                                                    <td>#{purchase.id}</td>
-                                                    <td>{formatDate(purchase.date)}</td>
-                                                    <td><strong>${purchase.totalAmount?.toFixed(2)}</strong></td>
-                                                    <td>
-                                                        <span className={getBadgeClass(purchase.paymentStatus)}>
-                                                            {purchase.paymentStatus}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <div className="empty-state">You have no past purchases.</div>
-                                )}
-                            </div>
-                        </>
+                        <div className="cards-grid">
+                            {history.serviceHistory.map(item => (
+                                <div key={item.id} className="history-card">
+                                    <p><strong>Date</strong> {new Date(item.date).toLocaleDateString()}</p>
+                                    <p><strong>Details</strong> {item.notes || 'No details provided'}</p>
+                                    <p><strong>Status</strong> <span className={`status ${item.status?.toLowerCase()}`}>{item.status}</span></p>
+                                </div>
+                            ))}
+                        </div>
                     )}
-                </div>
+                </section>
+
+                {/* Purchase History */}
+                <section>
+                    <h3>Purchases</h3>
+                    {!history?.purchaseHistory || history.purchaseHistory.length === 0 ? (
+                         <p className="empty-state">No purchases made yet.</p>
+                    ) : (
+                        <div className="cards-grid">
+                            {history.purchaseHistory.map(item => (
+                                <div key={item.id} className="history-card">
+                                    <p><strong>Total Amount</strong> ${item.totalAmount}</p>
+                                    <p><strong>Date</strong> {new Date(item.date).toLocaleDateString()}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
+
+                {/* Part Request History Section */}
+                <section>
+                    <h3>Requested Parts</h3>
+                    {!history?.partRequestHistory || history.partRequestHistory.length === 0 ? (
+                        <p className="empty-state">No part requests made yet.</p>
+                    ) : (
+                        <div className="cards-grid">
+                            {history.partRequestHistory.map(item => (
+                                <div key={item.id} className="history-card">
+                                    <p><strong>Part</strong> {item.partName}</p>
+                                    <p><strong>Description</strong> {item.description}</p>
+                                    <p><strong>Status</strong> <span className={`status ${item.status?.toLowerCase()}`}>{item.status}</span></p>
+                                    <p><strong>Requested On</strong> {new Date(item.createdAt).toLocaleDateString()}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
             </div>
-        </>
+        </div>
     );
 };
 

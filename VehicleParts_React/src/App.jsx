@@ -22,11 +22,13 @@ import NotificationsPage from './pages/admin/Notifications';
 
 function App() {
   return (
-    <BrowserRouter>
+<BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
         <Route path="/customer/register" element={<Register />} />
+        
+        {/* Admin Protected Routes */}
         <Route path="/admin/dashboard" element={
           <ProtectedRoute allowedRole="Admin">
             <AdminDashboard />
@@ -43,12 +45,12 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/admin/parts" element={
-        <ProtectedRoute allowedRole="Admin">
+          <ProtectedRoute allowedRole="Admin">
             <PartsPage />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         <Route path="/admin/purchase-invoices" element={
-        <ProtectedRoute allowedRole="Admin">
+          <ProtectedRoute allowedRole="Admin">
             <PurchaseInvoicesPage />
         </ProtectedRoute>
         } />
@@ -56,7 +58,7 @@ function App() {
         <Route path="/admin/notifications" element={
             <ProtectedRoute allowedRole="Admin">
                 <NotificationsPage />
-            </ProtectedRoute>
+              </ProtectedRoute>
         } />
 
         {/* Staff Protected Routes */}
@@ -77,7 +79,6 @@ function App() {
         </ProtectedRoute>
         } />
 
-
         {/* Customer Protected Routes */}
         <Route path="/customer/dashboard" element={
           <ProtectedRoute allowedRole="Customer">
@@ -85,14 +86,14 @@ function App() {
           </ProtectedRoute>
         } />
         <Route path="/customer/services" element={
-        <ProtectedRoute allowedRole="Customer">
+          <ProtectedRoute allowedRole="Customer">
             <Services />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         <Route path="/customer/about" element={
-        <ProtectedRoute allowedRole="Customer">
+          <ProtectedRoute allowedRole="Customer">
             <About />
-        </ProtectedRoute>
+          </ProtectedRoute>
         } />
         <Route path="/customer/profile" element={
           <ProtectedRoute allowedRole="Customer">
@@ -114,6 +115,7 @@ function App() {
             <History />
           </ProtectedRoute>
         } />
+        
       </Routes>
     </BrowserRouter>
   )

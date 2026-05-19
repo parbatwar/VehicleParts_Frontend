@@ -28,11 +28,13 @@ function CustomerNavbar() {
     navigate('/');
   };
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname.toLowerCase() === path.toLowerCase();
 
+  
   const navItems = [
     { label: 'HOME', path: '/customer/dashboard' },
-    { label: 'SERVICES', path: '/customer/Interactions' },
+    { label: 'MY VEHICLES', path: '/customer/vehicles' },
+    { label: 'SERVICES', path: '/customer/interactions' },
     { label: 'VIEW HISTORY', path: '/customer/history' },
     { label: 'ABOUT US', path: '/customer/about' },
   ];
@@ -56,6 +58,7 @@ function CustomerNavbar() {
           >
             {item.label}
           </Link>
+          
         ))}
       </div>
 
@@ -75,7 +78,7 @@ function CustomerNavbar() {
           <div className="dropdown-menu">
             <button 
               className="dropdown-item" 
-              onClick={() => { navigate('/customer/Profile'); setDropdownOpen(false); }}
+              onClick={() => { navigate('/customer/profile'); setDropdownOpen(false); }}
             >
               VIEW PROFILE
             </button>
