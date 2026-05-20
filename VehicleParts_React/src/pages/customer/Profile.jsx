@@ -1,114 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../../api/axios';
 import CustomerNavbar from '../../components/CustomerNavbar';
 import './Profile.css';
 
 const Profile = () => {
-    const [profile, setProfile] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({ firstName: '', lastName: '', phone: '' });
+    const [profile, setProfile] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phoneNumber: '',
+        address: '',
+        profilePictureUrl: ''
+    });
+    const [loading, setLoading] = useState(true);
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const response = await api.get('/Customer/profile');
-                setProfile(response.data);
-                setFormData({
-                    firstName: response.data.firstName,
-                    lastName: response.data.lastName,
-                    phone: response.data.phone
-                });
+                const actualData = response.data.data ? response.data.data : response.data;
+                setProfile(actualData);
             } catch (err) {
                 console.error("Failed to load profile", err);
+            } finally {
+                setLoading(false);
             }
         };
         fetchProfile();
     }, []);
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
+    // NEW: Handle File Upload
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("file", file);
+
         try {
-            const response = await api.put('/Customer/profile', formData);
-            setProfile(response.data);
-            setIsEditing(false);
-            alert("Profile updated successfully!");
+            // Sends multipart/form-data to your backend endpoint
+            const response = await api.post('/Customer/profile/picture', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            
+            const newUrl = response.data.data ? response.data.data : response.data.url;
+            setProfile({ ...profile, profilePictureUrl: newUrl });
+            alert("Profile picture updated successfully!");
         } catch (err) {
-            console.error("Failed to update profile", err);
-            alert("Failed to update profile.");
+            console.error("File upload failed", err);
+            alert("Failed to upload profile picture.");
         }
     };
 
-    if (!profile) return (
-        <>
-            <CustomerNavbar />
-            <div className="profile-wrapper">
-                <div className="loader-container">
-                    <div className="loader"></div>
-                    <p className="loader-text">LOADING PROFILE...</p>
-                </div>
-            </div>
-        </>
-    );
+    const triggerFileInput = () => {
+        fileInputRef.current.click();
+    };
+
+    // Construct image URL (ensure this matches where your backend serves files)
+    const backendBaseUrl = 'http://localhost:5000'; // Replace with your backend URL
+    const avatarSrc = profile.profilePictureUrl 
+        ? `${backendBaseUrl}${profile.profilePictureUrl}` 
+        : 'https://via.placeholder.com/150/111111/f39c12?text=Upload';
+
+    if (loading) return <div className="loader-container"><div className="loader"></div></div>;
 
     return (
-        <>
+        <div className="profile-page">
             <CustomerNavbar />
-            <div className="profile-wrapper">
-                <div className="profile-container">
-                    <div className="profile-header">
-                        <h2 className="profile-title">MY PROFILE</h2>
-                        <p className="profile-subtitle">manage your account information</p>
-                        <div className="header-divider"></div>
+            <div className="profile-container">
+                <h2>MY PROFILE</h2>
+                
+                <div className="profile-card">
+                    {/* Picture Section */}
+                    <div className="profile-avatar-section">
+                        <img 
+                            src={avatarSrc} 
+                            alt="Profile Avatar" 
+                            className="profile-avatar" 
+                            onClick={triggerFileInput} 
+                            title="Click to upload new picture"
+                        />
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            ref={fileInputRef} 
+                            style={{ display: 'none' }} 
+                            onChange={handleFileChange} 
+                        />
+                        <p className="avatar-hint">Click image to update</p>
                     </div>
 
-                    <div className="balance-card">
-                        <div className="balance-label">AVAILABLE CREDIT BALANCE</div>
-                        <div className="balance-value">${profile.creditBalance?.toFixed(2)}</div>
-                    </div>
-
-                    {isEditing ? (
-                        <form className="profile-form" onSubmit={handleUpdate}>
-                            <div className="form-group">
-                                <label>FIRST NAME</label>
-                                <input type="text" className="form-input" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} required />
-                            </div>
-                            <div className="form-group">
-                                <label>LAST NAME</label>
-                                <input type="text" className="form-input" value={formData.lastName} onChange={(e) => setFormData({...formData, lastName: e.target.value})} required />
-                            </div>
-                            <div className="form-group">
-                                <label>PHONE NUMBER</label>
-                                <input type="text" className="form-input" value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} required />
-                            </div>
-                            <div className="btn-container">
-                                <button type="submit" className="btn btn-success">SAVE CHANGES</button>
-                                <button type="button" className="btn btn-secondary" onClick={() => setIsEditing(false)}>CANCEL</button>
-                            </div>
-                        </form>
-                    ) : (
-                        <div>
-                            <div className="info-card">
-                                <div className="info-group">
-                                    <span className="info-label">FULL NAME</span>
-                                    <span className="info-value">{profile.firstName} {profile.lastName}</span>
-                                </div>
-                                <div className="info-group">
-                                    <span className="info-label">EMAIL ADDRESS</span>
-                                    <span className="info-value">{profile.email}</span>
-                                </div>
-                                <div className="info-group">
-                                    <span className="info-label">PHONE NUMBER</span>
-                                    <span className="info-value">{profile.phone || 'Not provided'}</span>
-                                </div>
-                            </div>
-                            <div className="btn-container">
-                                <button className="btn btn-primary" onClick={() => setIsEditing(true)}>EDIT PROFILE</button>
-                            </div>
+                    <form className="profile-form">
+                        <div className="form-group">
+                            <label>First Name</label>
+                            <input type="text" value={profile.firstName} className="form-control" disabled />
                         </div>
-                    )}
+                        <div className="form-group">
+                            <label>Email</label>
+                            <input type="email" value={profile.email} className="form-control" disabled />
+                        </div>
+                        {/* Add other fields as necessary */}
+                    </form>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
