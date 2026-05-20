@@ -349,14 +349,9 @@
   color: #f39c12;
 }
 
-.customer-profile .status-badge.completed {
-  background: rgba(46, 204, 113, 0.15);
-  color: #2ecc71;
-}
-
-.customer-profile .status-badge.pending {
-  background: rgba(243, 156, 18, 0.15);
-  color: #f39c12;
+.customer-profile .status-badge.overdue {
+  background-color: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
 }
 
 .customer-profile .date {
@@ -372,14 +367,6 @@
   text-overflow: ellipsis;
 }
 
-/* Table Column Widths */
-.customer-profile .data-table th:nth-child(1) { width: 80px; }
-.customer-profile .data-table th:nth-child(2) { width: 35%; }
-.customer-profile .data-table th:nth-child(3) { width: 60px; }
-.customer-profile .data-table th:nth-child(4) { width: 100px; }
-.customer-profile .data-table th:nth-child(5) { width: 90px; }
-.customer-profile .data-table th:nth-child(6) { width: 100px; }
-
 /* Empty State */
 .customer-profile .empty-state {
   text-align: center;
@@ -391,8 +378,8 @@
   border-radius: 8px;
 }
 
-/* Loading States */
-.customer-profile .profile-loading {
+/* Loading & Error States */
+.profile-loading {
   min-height: 100vh;
   background: #0a0a0a;
   display: flex;
@@ -406,6 +393,23 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+  background: #0a0a0a;
+  min-height: calc(100vh - 60px);
+}
+
+.customer-profile .profile-loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: #0a0a0a;
+  z-index: 100;
 }
 
 .customer-profile .profile-loader {
@@ -428,12 +432,18 @@
 }
 
 .customer-profile .profile-error-container {
-  flex: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 20px;
+  background: #0a0a0a;
+  z-index: 100;
 }
 
 .customer-profile .profile-error-container p {
@@ -454,8 +464,30 @@
   transition: all 0.2s;
 }
 
+/* Part Request Status Badges */
+.customer-profile .status-badge.status-approved {
+  background: rgba(52, 152, 219, 0.15);
+  color: #3498db;
+}
+
+.customer-profile .status-badge.status-fulfilled {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+}
+
+.customer-profile .status-badge.status-rejected {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+}
+
 .customer-profile .profile-back-btn:hover {
   background: rgba(243, 156, 18, 0.1);
+}
+
+.time-cell {
+  color: #bbb;
+  font-size: 13px;
+  font-family: monospace;
 }
 
 /* Responsive */
@@ -494,14 +526,6 @@
   .customer-profile .data-table td {
     padding: 10px 12px;
     font-size: 11px;
-  }
-  
-  .customer-profile .data-table th:nth-child(1),
-  .customer-profile .data-table th:nth-child(3),
-  .customer-profile .data-table th:nth-child(4),
-  .customer-profile .data-table th:nth-child(5),
-  .customer-profile .data-table th:nth-child(6) {
-    white-space: nowrap;
   }
   
   .customer-profile .item-name {

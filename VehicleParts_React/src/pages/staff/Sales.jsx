@@ -306,6 +306,7 @@ function Sales() {
   return (
     <div className="sales-page">
       <StaffNavbar />
+
       <div className="sales-container">
 
         <div className="sales-header">

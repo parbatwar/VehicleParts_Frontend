@@ -88,14 +88,14 @@ function Bookings() {
       <div className="bookings-container">
 
         <div className="bookings-header">
-          <div className="header-title">
-            <Calendar size={24} />
-            <h1>Appointments & Bookings</h1>
-          </div>
-          <div className="stats-badge">
+        <div>
+            <h1 className="bookings-title">BOOKINGS</h1>
+            <p className="bookings-subtitle">manage customer appointments</p>
+        </div>
+        <div className="stats-badge">
             <span className="stats-count">{bookings.length}</span>
             <span className="stats-label">Total Bookings</span>
-          </div>
+        </div>
         </div>
 
         {error && (

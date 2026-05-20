@@ -111,14 +111,14 @@ function PartRequests() {
       <StaffNavbar />
       <div className="requests-container">
         <div className="requests-header">
-          <div className="header-title">
-            <Package size={24} />
-            <h1>Part Requests</h1>
-          </div>
-          <div className="stats-badge">
+        <div>
+            <h1 className="requests-title">PART REQUESTS</h1>
+            <p className="requests-subtitle">manage customer part requests</p>
+        </div>
+        <div className="stats-badge">
             <span className="stats-count">{requests.length}</span>
             <span className="stats-label">Total Requests</span>
-          </div>
+        </div>
         </div>
 
         <div className="filter-tabs">

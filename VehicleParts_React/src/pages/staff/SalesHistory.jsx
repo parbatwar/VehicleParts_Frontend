@@ -5,6 +5,8 @@ import './SalesHistory.css';
 
 function SalesHistory({ sales, loading, onRefreshSales }) {
   const [selectedSale, setSelectedSale] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const [showModal, setShowModal] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(null);
   const [markingPaid, setMarkingPaid] = useState(false);
@@ -66,6 +68,21 @@ function SalesHistory({ sales, loading, onRefreshSales }) {
     }
   };
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentSales = sales.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(sales.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        document.querySelector('.history-section')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const goToFirstPage = () => setCurrentPage(1);
+    const goToPrevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+    const goToNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+    const goToLastPage = () => setCurrentPage(totalPages);
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -94,13 +111,13 @@ function SalesHistory({ sales, loading, onRefreshSales }) {
               </tr>
             </thead>
             <tbody>
-              {sales.map((sale, index) => (
+              {currentSales.map((sale, index) => (
                 <tr 
                   key={sale.id} 
                   className="history-row"
                   onClick={() => handleRowClick(sale)}
                 >
-                  <td>{index + 1}</td>
+                  <td>{indexOfFirstItem + index + 1}</td>
                   <td className="invoice-id">#{sale.id}</td>
                   <td>{sale.customerName}</td>
                   <td>{sale.customerEmail || '—'}</td>
@@ -108,7 +125,7 @@ function SalesHistory({ sales, loading, onRefreshSales }) {
                   <td>{sale.staffName || '—'}</td>
                   <td className="total-amount">Rs. {sale.totalAmount?.toLocaleString()}</td>
                   <td>
-                    <span className={`status-badge status-${sale.paymentStatus?.toLowerCase()}`}>
+                    <span className={`sh-status-badge sh-status-${sale.paymentStatus?.toLowerCase()}`}>
                       {sale.paymentStatus}
                     </span>
                   </td>
@@ -125,7 +142,56 @@ function SalesHistory({ sales, loading, onRefreshSales }) {
             </tbody>
           </table>
         </div>
+
+                {loading && (
+            <div className="sales-loading-overlay">
+                <div className="sales-loading-spinner"></div>
+                <p>LOADING SALES DATA...</p>
+            </div>
+        )}
+
+        {!loading && sales.length > 0 && (
+            <div className="pagination-container">
+                <div className="pagination-info">
+                    Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, sales.length)} of {sales.length} entries
+                </div>
+                <div className="pagination-controls">
+                    <button 
+                    onClick={goToFirstPage} 
+                    disabled={currentPage === 1}
+                    className="pagination-btn"
+                    >
+                    «
+                    </button>
+                    <button 
+                    onClick={goToPrevPage} 
+                    disabled={currentPage === 1}
+                    className="pagination-btn"
+                    >
+                    ‹
+                    </button>
+                    <span className="pagination-current">
+                    Page {currentPage} of {totalPages}
+                    </span>
+                    <button 
+                    onClick={goToNextPage} 
+                    disabled={currentPage === totalPages}
+                    className="pagination-btn"
+                    >
+                    ›
+                    </button>
+                    <button 
+                    onClick={goToLastPage} 
+                    disabled={currentPage === totalPages}
+                    className="pagination-btn"
+                    >
+                    »
+                    </button>
+                </div>
+            </div>
+        )}
       </div>
+
 
       {/* Invoice Modal */}
       {showModal && selectedSale && (
