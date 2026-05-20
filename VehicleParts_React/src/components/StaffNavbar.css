@@ -33,6 +33,12 @@
   white-space: nowrap;
 }
 
+.nav-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 6px;
+}
+
 .nav-link-item {
   color: #888;
   text-decoration: none;

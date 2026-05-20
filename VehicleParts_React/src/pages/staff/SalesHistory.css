@@ -1,21 +1,16 @@
 /* ==========================================================================
-   Sales History Layout & Container
+   Sales History Table
    ========================================================================== */
 .history-section {
-  background: rgba(18, 18, 18, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background-color: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
   overflow: hidden;
   margin-top: 16px;
 }
 
-/* ==========================================================================
-   Main Data Table Styles
-   ========================================================================== */
 .table-responsive {
   overflow-x: auto;
-  padding: 0 24px 24px;
 }
 
 .data-table {
@@ -24,24 +19,24 @@
 }
 
 .data-table th {
-  padding: 14px 12px;
-  background: transparent;
+  padding: 16px 12px;
+  background-color: #151515;
   color: #888;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #222;
+  text-align: left;
 }
 
 .data-table td {
   padding: 14px 12px;
   color: #bbb;
   font-size: 13px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid #1a1a1a;
 }
 
-/* Column Alignment - Fixed widths for better spacing */
 .data-table th:nth-child(1), .data-table td:nth-child(1) { text-align: center; width: 50px; }
 .data-table th:nth-child(2), .data-table td:nth-child(2) { text-align: left; width: 80px; }
 .data-table th:nth-child(3), .data-table td:nth-child(3) { text-align: left; width: 160px; }
@@ -58,10 +53,9 @@
 }
 
 .history-row:hover td {
-  background: rgba(255, 255, 255, 0.03) !important;
+  background-color: #161616 !important;
 }
 
-/* Row-specific Colors */
 .invoice-id {
   color: #f39c12 !important;
   font-family: monospace;
@@ -79,30 +73,29 @@
 }
 
 /* Status Badges */
-.status-badge {
+.sh-status-badge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 4px;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  min-width: 70px;
   text-align: center;
 }
 
-.status-paid {
-  background: rgba(46, 204, 113, 0.12);
+.sh-status-paid {
+  background-color: rgba(46, 204, 113, 0.15);
   color: #2ecc71;
 }
 
-.status-credit {
-  background: rgba(243, 156, 18, 0.12);
+.sh-status-credit {
+  background-color: rgba(243, 156, 18, 0.15);
   color: #f39c12;
 }
 
-.status-overdue {
-  background: rgba(231, 76, 60, 0.12);
+.sh-status-overdue {
+  background-color: rgba(231, 76, 60, 0.15);
   color: #e74c3c;
 }
 
@@ -110,13 +103,14 @@
   text-align: center !important;
   padding: 60px 0 !important;
   color: #555;
-  font-size: 13px;
+  font-size: 11px;
+  letter-spacing: 2px;
 }
 
 /* ==========================================================================
    Invoice Modal
    ========================================================================== */
-.modal-overlay {
+.sh-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -134,25 +128,25 @@
 .invoice-modal {
   background: #111;
   border: 1px solid #2a2a2a;
-  border-radius: 12px;
+  border-radius: 8px;
   width: 100%;
   max-width: 750px;
   max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  animation: modalFadeIn 0.2s ease;
+  animation: shModalFadeIn 0.2s ease;
 }
 
-@keyframes modalFadeIn {
+@keyframes shModalFadeIn {
   from { opacity: 0; transform: scale(0.97); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.modal-header {
+.sh-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 28px;
+  padding: 20px 24px;
   border-bottom: 1px solid #222;
   background: #0a0a0a;
   position: sticky;
@@ -160,7 +154,7 @@
   z-index: 10;
 }
 
-.modal-header h2 {
+.sh-modal-header h2 {
   margin: 0;
   color: #f39c12;
   font-size: 18px;
@@ -175,7 +169,7 @@
   font-family: monospace;
 }
 
-.modal-close {
+.sh-modal-close {
   background: none;
   border: none;
   color: #666;
@@ -185,33 +179,33 @@
   transition: color 0.2s;
 }
 
-.modal-close:hover {
+.sh-modal-close:hover {
   color: #e74c3c;
 }
 
 /* Invoice Body */
 .invoice-body {
-  padding: 28px;
+  padding: 24px;
 }
 
-/* Invoice Info Section */
 .invoice-info-section {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   padding-bottom: 20px;
   border-bottom: 1px solid #222;
 }
 
 .info-row {
   display: flex;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .info-label {
   width: 100px;
-  font-size: 11px;
+  font-size: 10px;
   color: #666;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .info-value {
@@ -230,56 +224,44 @@
 
 .invoice-items-table th {
   padding: 10px 8px;
-  color: #666;
+  color: #888;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   border-bottom: 1px solid #222;
+  background-color: #151515;
 }
 
 .invoice-items-table td {
-  padding: 10px 8px;
+  padding: 12px 8px;
   color: #bbb;
   font-size: 12px;
   border-bottom: 1px solid #1a1a1a;
 }
 
 .invoice-items-table th:first-child,
-.invoice-items-table td:first-child {
-  text-align: left;
-}
+.invoice-items-table td:first-child { text-align: left; }
 
 .invoice-items-table th:nth-child(2),
-.invoice-items-table td:nth-child(2) {
-  text-align: center;
-  width: 80px;
-}
+.invoice-items-table td:nth-child(2) { text-align: center; width: 80px; }
 
 .invoice-items-table th:nth-child(3),
-.invoice-items-table td:nth-child(3) {
-  text-align: right;
-  width: 100px;
-}
+.invoice-items-table td:nth-child(3) { text-align: right; width: 120px; }
 
 .invoice-items-table th:last-child,
-.invoice-items-table td:last-child {
-  text-align: right;
-  width: 100px;
-}
+.invoice-items-table td:last-child { text-align: right; width: 120px; }
 
 .item-name {
   color: #f39c12;
   font-weight: 500;
 }
 
-/* ==========================================================================
-   Totals Container - Right Aligned, Simple
-   ========================================================================== */
+/* Totals */
 .totals-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
+  margin-top: 20px;
   padding-top: 16px;
   border-top: 1px solid #222;
 }
@@ -294,20 +276,14 @@
   align-items: center;
   padding: 6px 0;
   font-size: 13px;
-  color: #bbb;
 }
 
-.totals-item span:first-child {
-  color: #888;
-}
-
-.totals-item span:last-child {
-  color: #fff;
-}
+.totals-item span:first-child { color: #888; }
+.totals-item span:last-child { color: #fff; }
 
 .totals-divider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.06);
+  background: #222;
   margin: 8px 0;
 }
 
@@ -317,7 +293,7 @@
 }
 
 .grand-total span:first-child {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #f39c12;
 }
@@ -331,7 +307,7 @@
 /* Invoice Actions */
 .invoice-actions {
   display: flex;
-  gap: 16px;
+  gap: 12px;
   margin-top: 24px;
   padding-top: 20px;
   border-top: 1px solid #222;
@@ -339,56 +315,37 @@
 
 .email-invoice-btn {
   flex: 1;
-  padding: 12px 20px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-transform: uppercase;
-  background: #2980b9;
-  color: #fff;
+  background-color: rgba(41, 128, 185, 0.2);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
 .email-invoice-btn:hover:not(:disabled) {
-  background: #3498db;
+  background-color: rgba(52, 152, 219, 0.3);
   transform: translateY(-1px);
 }
 
 .email-invoice-btn:disabled {
-  background: #1a2a33;
-  color: #556370;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* Modal Scrollbar */
-.invoice-modal::-webkit-scrollbar {
-  width: 6px;
-}
-
-.invoice-modal::-webkit-scrollbar-track {
-  background: #1a1a1a;
-  border-radius: 3px;
-}
-
-.invoice-modal::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 3px;
-}
-
-.invoice-modal::-webkit-scrollbar-thumb:hover {
-  background: #f39c12;
-}
-
-/* Mark as Paid Button */
 .mark-paid-btn {
+  flex: 1;
+  padding: 10px 20px;
   background-color: rgba(46, 204, 113, 0.15);
-  border: 1px solid #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
   color: #2ecc71;
-  padding: 12px 20px;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 11px;
   font-weight: 700;
@@ -403,45 +360,22 @@
 }
 
 .mark-paid-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* Modal Scrollbar */
+.invoice-modal::-webkit-scrollbar { width: 6px; }
+.invoice-modal::-webkit-scrollbar-track { background: #1a1a1a; border-radius: 3px; }
+.invoice-modal::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+.invoice-modal::-webkit-scrollbar-thumb:hover { background: #f39c12; }
 
 /* ==========================================================================
    Responsive
    ========================================================================== */
 @media (max-width: 768px) {
-  .table-responsive {
-    padding: 0 16px 16px;
-  }
-
-  .history-header {
-    padding: 16px;
-  }
-
-  .modal-header,
-  .invoice-body {
-    padding: 20px;
-  }
-
-  .invoice-actions {
-    flex-direction: column;
-  }
-
-  .data-table th,
-  .data-table td {
-    padding: 10px 8px;
-  }
-  
-  .total-line {
-    justify-content: space-between;
-  }
-  
-  .total-line .label {
-    width: auto;
-  }
-  
-  .total-line .value {
-    width: auto;
-  }
+  .table-responsive { padding: 0; }
+  .sh-modal-header, .invoice-body { padding: 16px; }
+  .invoice-actions { flex-direction: column; }
+  .data-table th, .data-table td { padding: 10px 8px; }
 }

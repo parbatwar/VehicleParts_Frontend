@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Car, ShoppingBag, Wrench, ArrowLeft, Phone, Mail, Package } from 'lucide-react'
 import api from '../../api/axios'
+import StaffNavbar from '../../components/StaffNavbar'
+import './CustomerProfile.css'
 
 function CustomerProfile() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [customer, setCustomer] = useState(null)
   const [loading, setLoading] = useState(true)
-  const fullName = localStorage.getItem('fullName')
-
-  const handleLogout = () => {
-    localStorage.clear()
-    navigate('/')
-  }
+  const [activeTab, setActiveTab] = useState('vehicles')
 
   useEffect(() => {
     fetchCustomer()
@@ -30,196 +28,223 @@ function CustomerProfile() {
   }
 
   if (loading) return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: '#f39c12', fontSize: '18px', letterSpacing: '2px' }}>LOADING...</p>
+    <div className="profile-loading">
+      <StaffNavbar />
+      <div className="profile-loader-container">
+        <div className="profile-loader"></div>
+        <p>LOADING CUSTOMER DETAILS...</p>
+      </div>
     </div>
   )
 
   if (!customer) return (
-    <div style={{ minHeight: '100vh', background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: '#ff4d4d', fontSize: '18px' }}>Customer not found.</p>
+    <div className="profile-loading">
+      <StaffNavbar />
+      <div className="profile-error-container">
+        <p>Customer not found.</p>
+        <button className="profile-back-btn" onClick={() => navigate('/staff/customers')}>BACK TO CUSTOMERS</button>
+      </div>
     </div>
   )
+
+  const totalSpent = customer.purchaseHistory?.reduce((sum, h) => sum + (h.totalAmount || 0), 0) || 0
 
   return (
-    <div style={s.page}>
-      <style>{`
-        .stat-card:hover { border-color: rgba(243,156,18,0.5) !important; transform: translateY(-2px); }
-        .vehicle-card:hover { border-color: rgba(243,156,18,0.5) !important; }
-        .history-row:hover { background: rgba(255,255,255,0.03) !important; }
-        .back-btn:hover { background: rgba(243,156,18,0.1) !important; }
-        .logout-btn:hover { background: #ff4d4d !important; color: #fff !important; }
-      `}</style>
+    <div className="customer-profile">
+      <StaffNavbar />
 
-      {/* Navbar */}
-      <div style={s.navbar}>
-        <div style={s.navLeft}>
-          <button className="back-btn" style={s.backBtn} onClick={() => navigate('/staff/customers')}>
-            ← Back
+      <div className="profile-container">
+        {/* Back Button */}
+        <button className="back-button" onClick={() => navigate('/staff/customers')}>
+          <ArrowLeft size={16} /> BACK TO CUSTOMERS
+        </button>
+
+        {/* Header Section */}
+        <div className="profile-header">
+          <div className="profile-avatar">
+            <span className="avatar-initial">{customer.fullName?.charAt(0)}</span>
+          </div>
+          <div className="profile-info">
+            <div className="name-row">
+              <h1 className="profile-name">{customer.fullName}</h1>
+              <span className={`reg-badge ${customer.regType === 'Self' ? 'reg-self' : 'reg-staff'}`}>
+                {customer.regType === 'Self' ? 'SELF' : 'STAFF'}
+              </span>
+            </div>
+            <div className="contact-row">
+              <span className="contact-item"><Mail size={14} /> {customer.email}</span>
+              <span className="contact-dot">•</span>
+              <span className="contact-item"><Phone size={14} /> {customer.phone || 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */} 
+        <div className="profile-tabs">
+          <button className={`tab-btn ${activeTab === 'vehicles' ? 'active' : ''}`} onClick={() => setActiveTab('vehicles')}>
+            <Car size={16} /> VEHICLES
           </button>
-          <span style={s.logo}>⚙️ VEHICLE PARTS</span>
-        </div>
-        <div style={s.navRight}>
-          <span style={s.navUser}>👤 {fullName}</span>
-          <button className="logout-btn" style={s.logoutBtn} onClick={handleLogout}>LOGOUT</button>
-        </div>
-      </div>
-
-      <div style={s.content}>
-
-        {/* Hero Section */}
-        <div style={s.hero}>
-          <div style={s.avatarWrap}>
-            <div style={s.avatar}>{customer.fullName.charAt(0)}</div>
-            <div style={s.avatarGlow} />
-          </div>
-          <div style={s.heroInfo}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <h1 style={s.name}>{customer.fullName}</h1>
-              <span style={s.badge}>{customer.regType}</span>
-            </div>
-            <div style={s.contactRow}>
-              <span style={s.contactItem}>📧 {customer.email}</span>
-              <span style={s.contactDot}>•</span>
-              <span style={s.contactItem}>📞 {customer.phone || 'N/A'}</span>
-            </div>
-          </div>
+          <button className={`tab-btn ${activeTab === 'purchases' ? 'active' : ''}`} onClick={() => setActiveTab('purchases')}>
+            <ShoppingBag size={16} /> PURCHASES
+          </button>
+          <button className={`tab-btn ${activeTab === 'services' ? 'active' : ''}`} onClick={() => setActiveTab('services')}>
+            <Wrench size={16} /> SERVICES
+          </button>
+          <button className={`tab-btn ${activeTab === 'requests' ? 'active' : ''}`} onClick={() => setActiveTab('requests')}>
+            <Package size={16} /> PART REQUESTS
+          </button>
         </div>
 
-        {/* Stats Row */}
-        <div style={s.statsRow}>
-          <div className="stat-card" style={s.statCard}>
-            <p style={s.statLabel}>CREDIT BALANCE</p>
-            <p style={s.statValue}>NPR {customer.creditBalance.toFixed(2)}</p>
-          </div>
-          <div className="stat-card" style={s.statCard}>
-            <p style={s.statLabel}>VEHICLES</p>
-            <p style={s.statValue}>{customer.vehicles.length}</p>
-          </div>
-          <div className="stat-card" style={s.statCard}>
-            <p style={s.statLabel}>TOTAL PURCHASES</p>
-            <p style={s.statValue}>{customer.purchaseHistory.length}</p>
-          </div>
-          <div className="stat-card" style={s.statCard}>
-            <p style={s.statLabel}>TOTAL SPENT</p>
-            <p style={s.statValue}>
-              NPR {customer.purchaseHistory.reduce((sum, h) => sum + h.totalAmount, 0).toFixed(2)}
-            </p>
-          </div>
-        </div>
-
-        {/* Vehicles Section */}
-        <div style={s.section}>
-          <div style={s.sectionHeader}>
-            <h2 style={s.sectionTitle}>🚗 Vehicles</h2>
-            <span style={s.sectionCount}>{customer.vehicles.length} registered</span>
-          </div>
-          {customer.vehicles.length === 0 ? (
-            <div style={s.emptyState}>No vehicles registered.</div>
-          ) : (
-            <div style={s.vehiclesGrid}>
-              {customer.vehicles.map(v => (
-                <div key={v.id} className="vehicle-card" style={s.vehicleCard}>
-                  <div style={s.vehicleIcon}>🚙</div>
-                  <h3 style={s.vehicleName}>{v.brand} {v.model}</h3>
-                  <div style={s.vehicleDetails}>
-                    <div style={s.vehicleDetail}>
-                      <span style={s.detailLabel}>YEAR</span>
-                      <span style={s.detailValue}>{v.year}</span>
-                    </div>
-                    <div style={s.vehicleDetail}>
-                      <span style={s.detailLabel}>PLATE</span>
-                      <span style={s.detailValue}>{v.plateNumber}</span>
-                    </div>
-                  </div>
+    {/* Vehicles Tab */}
+    {activeTab === 'vehicles' && (
+    <div className="tab-content">
+        {customer.vehicles?.length === 0 ? (
+        <div className="empty-state">No vehicles registered.</div>
+        ) : (
+        <div className="vehicles-card-grid">
+            {customer.vehicles?.map(vehicle => (
+            <div key={vehicle.id} className="vehicle-card-proper">
+                <div className="vehicle-card-header">
+                <div className="vehicle-icon-badge">
+                    <Car size={20} />
                 </div>
-              ))}
+                <div className="vehicle-year-badge">{vehicle.year}</div>
+                </div>
+                <div className="vehicle-card-body">
+                <div className="vehicle-brand-name">{vehicle.brand}</div>
+                <div className="vehicle-model-name">{vehicle.model}</div>
+                </div>
+                <div className="vehicle-card-footer">
+                <div className="plate-number-proper">{vehicle.plateNumber}</div>
+                </div>
             </div>
-          )}
+            ))}
         </div>
+        )}
+    </div>
+    )}
+        {/* Purchases Tab */}
+        {activeTab === 'purchases' && (
+        <div className="tab-content">
+            {customer.purchaseHistory?.length === 0 ? (
+            <div className="empty-state">No purchase history found.</div>
+            ) : (
+            <div className="table-wrapper">
+                <table className="data-table">
+                <thead>
+                    <tr>
+                    <th>INVOICE</th>
+                    <th>ITEM</th>
+                    <th>QTY</th>
+                    <th>AMOUNT</th>
+                    <th>STATUS</th>
+                    <th>DATE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {customer.purchaseHistory?.flatMap(purchase => 
+                    purchase.items?.map((item, idx) => (
+                        <tr key={`${purchase.id}-${idx}`}>
+                        <td className="invoice-id">#{purchase.id}</td>
+                        <td className="item-name">{item.partName}</td>
+                        <td className="qty-cell">{item.quantity}</td>
+                        <td className="amount">
+                            Rs. {(item.price * item.quantity)?.toLocaleString() || '—'}
+                        </td>
+                        <td>
+                            <span className={`status-badge ${purchase.paymentStatus?.toLowerCase() || 'paid'}`}>
+                            {purchase.paymentStatus?.toUpperCase() || 'PAID'}
+                            </span>
+                        </td>
+                        <td className="date">{new Date(purchase.date).toLocaleDateString()}</td>
+                        </tr>
+                    ))
+                    )}
+                </tbody>
+                </table>
+            </div>
+            )}
+        </div>
+        )}
 
-        {/* Purchase History Section */}
-        <div style={s.section}>
-          <div style={s.sectionHeader}>
-            <h2 style={s.sectionTitle}>📋 Purchase History</h2>
-            <span style={s.sectionCount}>{customer.purchaseHistory.length} transactions</span>
-          </div>
-          {customer.purchaseHistory.length === 0 ? (
-            <div style={s.emptyState}>No purchase history found.</div>
-          ) : (
-            <div style={s.historyTable}>
-              <div style={s.historyHead}>
-                <span>INVOICE</span>
-                <span>AMOUNT</span>
-                <span>STATUS</span>
-                <span>DATE</span>
+        {/* Services Tab */}
+        {activeTab === 'services' && (
+          <div className="tab-content">
+            {customer.serviceHistory?.length === 0 ? (
+              <div className="empty-state">No service history found.</div>
+            ) : (
+              <div className="table-wrapper">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>DATE</th>
+                      <th>SERVICE</th>
+                      <th>VEHICLE</th>
+                      <th>NOTES</th>
+                      <th>STATUS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customer.serviceHistory?.map(service => (
+                      <tr key={service.id}>
+                        <td className="date">{new Date(service.date).toLocaleDateString()}</td>
+                        <td>{service.serviceType || 'General Service'}</td>
+                        <td>{service.vehicleName || '—'}</td>
+                        <td className="notes-cell">{service.notes || '—'}</td>
+                        <td>
+                          <span className={`status-badge ${service.status?.toLowerCase() || 'completed'}`}>
+                            {service.status?.toUpperCase() || 'COMPLETED'}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-              {customer.purchaseHistory.map(h => (
-                <div key={h.id} className="history-row" style={s.historyRow}>
-                  <span style={{ color: '#f39c12', fontWeight: 600 }}>#INV-{h.id}</span>
-                  <span style={{ color: '#fff' }}>NPR {h.totalAmount.toFixed(2)}</span>
-                  <span style={{
-                    padding: '3px 10px',
-                    borderRadius: '20px',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    background: h.paymentStatus === 'Paid' ? 'rgba(46,204,113,0.15)' : h.paymentStatus === 'Credit' ? 'rgba(243,156,18,0.15)' : 'rgba(255,77,77,0.15)',
-                    color: h.paymentStatus === 'Paid' ? '#2ecc71' : h.paymentStatus === 'Credit' ? '#f39c12' : '#ff4d4d'
-                  }}>
-                    {h.paymentStatus.toUpperCase()}
-                  </span>
-                  <span style={{ color: '#888' }}>{new Date(h.date).toLocaleDateString()}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
+        {/* Part Requests Tab */}
+        {activeTab === 'requests' && (
+          <div className="tab-content">
+            {customer.partRequests?.length === 0 ? (
+              <div className="empty-state">No part requests found.</div>
+            ) : (
+              <div className="table-wrapper">
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>PART NAME</th>
+                      <th>DESCRIPTION</th>
+                      <th>QTY</th>
+                      <th>STATUS</th>
+                      <th>REQUESTED ON</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customer.partRequests?.map(request => (
+                      <tr key={request.id}>
+                        <td className="request-part">{request.partName}</td>
+                        <td className="notes-cell">{request.description || '—'}</td>
+                        <td className="qty-cell">{request.quantity || 1}</td>
+                        <td>
+                          <span className={`status-badge ${request.status?.toLowerCase() || 'pending'}`}>
+                            {request.status?.toUpperCase() || 'PENDING'}
+                          </span>
+                        </td>
+                        <td className="date">{new Date(request.createdAt).toLocaleDateString()}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
-}
-
-const s = {
-  page: { minHeight: '100vh', backgroundColor: '#0a0a0a', color: '#fff', fontFamily: 'system-ui, -apple-system, sans-serif', display: 'flex', flexDirection: 'column' },
-  navbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 40px', background: 'rgba(20,20,20,0.95)', borderBottom: '1px solid rgba(243,156,18,0.2)', position: 'sticky', top: 0, zIndex: 100 },
-  navLeft: { display: 'flex', alignItems: 'center', gap: '20px' },
-  navRight: { display: 'flex', alignItems: 'center', gap: '16px' },
-  logo: { color: '#f39c12', fontSize: '13px', letterSpacing: '3px' },
-  navUser: { color: '#888', fontSize: '14px' },
-  backBtn: { padding: '8px 16px', background: 'transparent', color: '#f39c12', border: '1px solid rgba(243,156,18,0.4)', borderRadius: '4px', cursor: 'pointer', fontSize: '13px', fontWeight: 600, transition: 'all 0.2s' },
-  logoutBtn: { padding: '8px 16px', background: 'rgba(255,77,77,0.15)', color: '#ff4d4d', border: '1px solid rgba(255,77,77,0.3)', borderRadius: '4px', cursor: 'pointer', fontWeight: 700, letterSpacing: '1px', fontSize: '12px', transition: 'all 0.2s' },
-  content: { padding: '40px', maxWidth: '1000px', width: '100%', margin: '0 auto' },
-  hero: { display: 'flex', alignItems: 'center', gap: '30px', marginBottom: '32px', padding: '36px', background: 'linear-gradient(135deg, #141414 0%, #1a1a1a 100%)', border: '1px solid rgba(243,156,18,0.15)', borderRadius: '16px', position: 'relative', overflow: 'hidden' },
-  avatarWrap: { position: 'relative', flexShrink: 0 },
-  avatar: { width: '90px', height: '90px', background: '#f39c12', color: '#000', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '36px', fontWeight: 700, position: 'relative', zIndex: 1 },
-  avatarGlow: { position: 'absolute', top: '-10px', left: '-10px', width: '110px', height: '110px', background: 'rgba(243,156,18,0.15)', borderRadius: '50%', zIndex: 0 },
-  heroInfo: { flex: 1 },
-  name: { color: '#fff', fontSize: '28px', fontWeight: 700, margin: 0, letterSpacing: '1px' },
-  badge: { background: '#f39c12', color: '#000', padding: '4px 14px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', flexShrink: 0 },
-  contactRow: { display: 'flex', alignItems: 'center', gap: '12px', marginTop: '10px' },
-  contactItem: { color: '#888', fontSize: '14px' },
-  contactDot: { color: '#333' },
-  statsRow: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '32px' },
-  statCard: { background: '#141414', border: '1px solid #222', borderRadius: '12px', padding: '20px', transition: 'all 0.2s', cursor: 'default' },
-  statLabel: { color: '#555', fontSize: '11px', letterSpacing: '2px', margin: '0 0 8px 0' },
-  statValue: { color: '#f39c12', fontSize: '20px', fontWeight: 700, margin: 0 },
-  section: { marginBottom: '32px' },
-  sectionHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #1a1a1a' },
-  sectionTitle: { color: '#fff', fontSize: '18px', fontWeight: 600, margin: 0 },
-  sectionCount: { color: '#555', fontSize: '13px' },
-  emptyState: { color: '#444', fontSize: '14px', padding: '20px', textAlign: 'center', background: '#141414', borderRadius: '8px', border: '1px solid #1a1a1a' },
-  vehiclesGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '16px' },
-  vehicleCard: { background: '#141414', border: '1px solid #222', borderRadius: '12px', padding: '24px', transition: 'all 0.2s' },
-  vehicleIcon: { fontSize: '32px', marginBottom: '12px' },
-  vehicleName: { color: '#fff', fontSize: '16px', fontWeight: 600, margin: '0 0 16px 0' },
-  vehicleDetails: { display: 'flex', flexDirection: 'column', gap: '8px' },
-  vehicleDetail: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  detailLabel: { color: '#555', fontSize: '11px', letterSpacing: '1px' },
-  detailValue: { color: '#ccc', fontSize: '13px', fontWeight: 500 },
-  historyTable: { background: '#141414', border: '1px solid #222', borderRadius: '12px', overflow: 'hidden' },
-  historyHead: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', padding: '14px 24px', background: '#1a1a1a', color: '#555', fontSize: '11px', letterSpacing: '2px', borderBottom: '1px solid #222' },
-  historyRow: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', padding: '16px 24px', borderBottom: '1px solid #1a1a1a', fontSize: '13px', transition: 'background 0.2s', alignItems: 'center' },
 }
 
 export default CustomerProfile

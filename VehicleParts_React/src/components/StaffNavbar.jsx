@@ -1,5 +1,6 @@
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
+import { Calendar, Package } from 'lucide-react';
 import './StaffNavbar.css';
 
 function StaffNavbar() {
@@ -25,13 +26,15 @@ function StaffNavbar() {
     { label: 'DASHBOARD', path: '/staff/dashboard' },
     { label: 'CUSTOMERS', path: '/staff/customers' },
     { label: 'SALES', path: '/staff/sales' },
+    { label: 'BOOKINGS', path: '/staff/bookings' },
+    { label: 'PART REQUESTS', path: '/staff/part-requests' },
   ];
 
   return (
     <nav className="staff-nav">
       {/* Left: Logo */}
       <div className="brand-container">
-        <Link to="/customer/dashboard" style={{ display: 'flex', alignItems: 'center' }}>
+        <Link to="/staff/dashboard" style={{ display: 'flex', alignItems: 'center' }}>
           <img src="/GearUp.png" alt="GearUp Logo" className="nav-logo" />
         </Link>
       </div>
@@ -44,6 +47,7 @@ function StaffNavbar() {
             to={item.path} 
             className={`nav-link-item ${isActive(item.path) ? 'active' : ''}`}
           >
+            {item.icon && <span className="nav-icon">{item.icon}</span>}
             {item.label}
           </Link>
         ))}
@@ -58,7 +62,7 @@ function StaffNavbar() {
           <span className="user-name-text">{fullName.toUpperCase()}</span>
           <span className="dropdown-arrow" style={{ transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>
             ▼
-          </span>
+          </span> 
         </div>
 
         {dropdownOpen && (

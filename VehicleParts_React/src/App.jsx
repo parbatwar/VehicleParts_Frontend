@@ -19,6 +19,8 @@ import PurchaseInvoicesPage from './pages/admin/Purchase'
 import Sales from './pages/staff/Sales';
 import CustomerProfile from './pages/staff/CustomerProfile';
 import NotificationsPage from './pages/admin/Notifications';
+import Bookings from './pages/staff/Bookings'
+import PartRequests from './pages/staff/PartRequests'
 
 
 function App() {
@@ -77,6 +79,18 @@ function App() {
         <Route path="/staff/sales" element={
         <ProtectedRoute allowedRole="Staff">
             <Sales />
+        </ProtectedRoute>
+        } />
+
+        <Route path="/staff/bookings" element={
+        <ProtectedRoute allowedRole="Staff">
+            <Bookings />
+        </ProtectedRoute>
+        } />
+
+        <Route path="/staff/part-requests" element={
+        <ProtectedRoute allowedRole="Staff">
+            <PartRequests />
         </ProtectedRoute>
         } />
 
