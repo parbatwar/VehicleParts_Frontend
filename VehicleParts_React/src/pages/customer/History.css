@@ -1,11 +1,10 @@
-/* History Wrapper / Page */
+/* History Page */
 .history-page {
     min-height: 100vh;
     background-color: #0f0f0f;
     background-image: radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px);
     background-size: 20px 20px;
     color: #fff;
-    padding-bottom: 50px;
 }
 
 .history-container {
@@ -14,133 +13,651 @@
     padding: 40px max(5vw, 20px);
 }
 
-/* Titles */
-.history-container h2 {
+/* Header */
+.history-header {
+    margin-bottom: 32px;
+    border-bottom: 1px solid #222;
+    padding-bottom: 20px;
+}
+
+.history-header h2 {
     font-size: 24px;
     color: #fff;
-    margin-bottom: 30px;
-    border-bottom: 1px solid #222;
-    padding-bottom: 15px;
+    margin: 0 0 8px 0;
     letter-spacing: 1px;
-    text-transform: uppercase;
+    font-weight: 600;
 }
 
-.history-container section {
-    background-color: #111;
-    border: 1px solid #222;
-    border-radius: 8px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+.history-subtitle {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    letter-spacing: 0.5px;
 }
 
-.history-container h3 {
-    font-size: 14px;
+/* Tabs */
+.history-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    border-bottom: 1px solid #222;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.tab-btn:hover {
     color: #f39c12;
-    letter-spacing: 2px;
-    margin-bottom: 20px;
-    text-transform: uppercase;
 }
 
-/*  Grid Layout for Cards  */
+.tab-btn.active {
+    color: #f39c12;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #f39c12;
+}
+
+.tab-count {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.tab-btn.active .tab-count {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+}
+
+/* Tab Content */
+.tab-content {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards Grid */
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     gap: 20px;
-    margin-top: 15px;
 }
 
-/*  Distinct Card Styling  */
+/* History Card */
 .history-card {
-    background-color: #161616;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s;
 }
 
 .history-card:hover {
-    transform: translateY(-3px);
-    border-color: #f39c12;
-    background-color: #1a1a1a;
+    border-color: #333;
+    transform: translateY(-2px);
+    background: #141414;
 }
 
-.history-card p {
-    margin: 0;
-    color: #ccc;
-    font-size: 14px;
-    line-height: 1.4;
+/* Card Header - FIXED icon visibility */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #0d0d0d;
+    border-bottom: 1px solid #1a1a1a;
 }
 
-/* Labels inside the cards */
-.history-card p strong {
-    color: #777;
-    font-size: 11px;
-    letter-spacing: 1px;
+.card-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(243, 156, 18, 0.12);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f39c12;
+}
+
+.card-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 1.6;
+    flex-shrink: 0;
+}
+
+/* Card Body */
+.card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.row-label {
+    color: #666;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
-    display: block;
-    margin-bottom: 4px;
+    min-width: 90px;
 }
 
-/* Empty State / No Data */
+.row-value {
+    color: #bbb;
+    text-align: right;
+    flex: 1;
+    word-break: break-word;
+}
+
+.row-value.amount {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.row-value.part-name {
+    color: #f39c12;
+    font-weight: 500;
+}
+
+.row-value.vehicle-name {
+    color: #f39c12;
+    font-weight: 500;
+}
+
+.row-value.notes,
+.row-value.description {
+    text-align: right;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+/* Items Section */
+.items-section {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.items-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.item-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.item-name {
+    color: #ccc;
+    flex: 1;
+}
+
+.item-qty {
+    color: #888;
+    margin: 0 12px;
+}
+
+.item-price {
+    color: #2ecc71;
+    font-weight: 500;
+}
+
+/* Status Badges */
+.status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status.paid {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+}
+
+.status.credit {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+}
+
+.status.overdue {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+.status.pending {
+    background: rgba(243, 156, 18, 0.15);
+    color: #f39c12;
+}
+
+.status.completed {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+}
+
+.status.cancelled {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+}
+
+.status.confirmed {
+    background: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+}
+
+/* Empty State */
 .empty-state {
     text-align: center;
-    padding: 40px;
+    padding: 80px 40px;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
     color: #666;
-    background-color: #1a1a1a;
-    border-radius: 4px;
-    border: 1px dashed #333;
-    font-size: 12px;
-    letter-spacing: 1px;
 }
 
-/* Loader styles */
+.empty-state svg {
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.empty-state p {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #888;
+}
+
+.empty-state span {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Loader */
 .loader-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 60vh;
+    gap: 20px;
 }
 
 .loader {
     width: 40px;
     height: 40px;
-    border: 3px solid #222;
-    border-top: 3px solid #f39c12;
+    border: 2px solid #222;
+    border-top-color: #f39c12;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
+}
+
+.loader-container p {
+    color: #888;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+/* Add these styles to your existing History.css */
+
+/* Review Button */
+.review-action {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 8px;
+    color: #2ecc71;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    justify-content: center;
+}
+
+.review-btn:hover {
+    background: rgba(46, 204, 113, 0.2);
+    transform: translateY(-1px);
+}
+
+.reviewed-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(46, 204, 113, 0.05);
+    border: 1px solid rgba(46, 204, 113, 0.15);
+    border-radius: 8px;
+    color: #2ecc71;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 20px;
+}
+
+/* Review Modal */
+.review-modal {
+    background: #111;
+    border: 1px solid #2a2a2a;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    animation: modalFadeIn 0.2s ease;
+    overflow: hidden;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #222;
+    background: #0a0a0a;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #f39c12;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.modal-close:hover {
+    color: #e74c3c;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.appointment-info {
+    background: #0a0a0a;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.appointment-info p {
+    margin: 0;
+    font-size: 13px;
+    color: #888;
+}
+
+.appointment-info p:first-child {
+    margin-bottom: 4px;
+}
+
+.appointment-info strong {
+    color: #666;
+}
+
+/* Rating Section */
+.rating-section {
+    margin-bottom: 24px;
+}
+
+.rating-section label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.stars-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.star {
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #333;
+}
+
+.star:hover,
+.star.filled {
+    fill: #f39c12;
+    color: #f39c12;
+}
+
+.rating-label {
+    text-align: center;
+    font-size: 13px;
+    color: #f39c12;
+    font-weight: 500;
+}
+
+/* Comment Section */
+.comment-section {
+    margin-bottom: 24px;
+}
+
+.comment-section label {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: #0a0a0a;
+    border: 1px solid #222;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: #f39c12;
+}
+
+.comment-input::placeholder {
+    color: #444;
+}
+
+/* Review Messages */
+.review-error {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: #e74c3c;
+    font-size: 12px;
+    text-align: center;
+}
+
+.review-success {
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 20px;
+    color: #2ecc71;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.cancel-review-btn {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid #e74c3c;
+    border-radius: 8px;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.cancel-review-btn:hover {
+    background: rgba(231, 76, 60, 0.1);
+}
+
+.submit-review-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.review-btn-disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.submit-review-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+}
+
+.submit-review-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .review-modal {
+        max-width: 95%;
+    }
+    
+    .stars-container {
+        gap: 6px;
+    }
+    
+    .star {
+        size: 24px;
+    }
+    
+    .modal-actions {
+        flex-direction: column;
+    }
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    to { transform: rotate(360deg); }
 }
 
-/* Status Badges */
-.status {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 2px;
-}
-
-.status.pending { background-color: rgba(243, 156, 18, 0.2); color: #f39c12; }
-.status.open { background-color: rgba(52, 152, 219, 0.2); color: #3498db; }
-.status.completed, .status.done { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-.status.cancelled { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; }
-.status.paid { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-.status.unpaid { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; }
-
-/* Global Error Message */
+/* Error */
 .error {
     text-align: center;
     color: #e74c3c;
@@ -148,4 +665,56 @@
     font-size: 16px;
     background-color: #0f0f0f;
     min-height: 100vh;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .history-container {
+        padding: 20px;
+    }
+
+    .history-header h2 {
+        font-size: 20px;
+    }
+
+    .tab-btn {
+        padding: 10px 16px;
+        font-size: 11px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card-body {
+        padding: 16px;
+    }
+
+    .card-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .row-label {
+        min-width: auto;
+    }
+
+    .row-value {
+        text-align: left;
+    }
+
+    .row-value.notes,
+    .row-value.description {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .item-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .item-name {
+        width: 100%;
+    }
 }

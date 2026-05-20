@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomerNavbar from '../../components/CustomerNavbar';
+import { MapPin, Mail, Phone, Clock, Package, Wrench, ClipboardList } from 'lucide-react';
 import './About.css';
 
 const About = () => {
@@ -7,51 +8,93 @@ const About = () => {
         <div className="about-page">
             <CustomerNavbar />
             <div className="about-container">
+
+                {/* Header */}
                 <div className="about-header">
-                    <h2>ABOUT GEARUP</h2>
-                    <p className="about-subtitle">Your trusted partner for genuine vehicle parts and professional servicing.</p>
-                    <div className="header-divider"></div>
+                    <h2>About GearUp</h2>
+                    <p className="about-headline">Your trusted partner for genuine parts &amp; professional servicing</p>
+                    <p className="about-subtitle">
+                        We make vehicle maintenance transparent, accessible, and hassle-free for every car owner in the valley.
+                    </p>
                 </div>
 
-                <div className="about-content">
-                    {/* Mission Section */}
-                    <section className="about-card mission-card">
-                        <h3> Our Mission</h3>
+                {/* Mission */}
+                <section className="mission-card">
+                    <p>
+                        GearUp was built with one goal — to eliminate the guesswork from vehicle care. 
+                        We source genuine parts directly from trusted manufacturers, pair them with certified mechanics, 
+                        and give you a clear digital record of everything your vehicle has ever needed. 
+                        No surprises. No middlemen. Just reliable service.
+                    </p>
+                </section>
+
+                {/* Features */}
+                <div className="features-grid">
+                    <div className="feature-card">
+                        <div className="feature-icon"><Package size={20} strokeWidth={1.6} /></div>
+                        <h3>Genuine Parts</h3>
                         <p>
-                            We are dedicated to providing high-quality, genuine vehicle parts along with top-tier mechanic services. 
-                            Our goal is to make vehicle maintenance transparent, accessible, and hassle-free for all car owners.
+                            Every part in our inventory is sourced directly from trusted manufacturers. 
+                            Don't see what you need? Request it from your dashboard and we'll sort it out.
                         </p>
-                    </section>
-
-                    {/* Features Layout */}
-                    <div className="features-grid">
-                        <div className="about-card">
-                            <h3>Genuine Parts</h3>
-                            <p>We source our inventory directly from trusted manufacturers to ensure reliability and performance. If it's not in stock, just request it via your dashboard!</p>
-                        </div>
-                        
-                        <div className="about-card">
-                            <h3> Expert Servicing</h3>
-                            <p>Book appointments seamlessly through our platform. Our certified mechanics handle everything from routine checkups to complex automotive repairs.</p>
-                        </div>
-
-                        <div className="about-card">
-                            <h3> Transparent History</h3>
-                            <p>Keep track of everything effortlessly. We maintain a detailed digital record of all your past purchases, part requests, and service appointments.</p>
-                        </div>
                     </div>
 
-                    {/* Contact/Location Section */}
-                    <section className="about-card contact-card">
-                        <h3> Visit Us</h3>
-                        <div className="contact-info">
-                            <p><strong>Address:</strong> Patan, Lalitpur</p>
-                            <p><strong>Email:</strong> support@gearup-parts.com</p>
-                            <p><strong>Phone:</strong> +977 9811223344</p>
-                            <p><strong>Working Hours:</strong> Mon - Sat (8:00 AM - 6:00 PM)</p>
-                        </div>
-                    </section>
+                    <div className="feature-card">
+                        <div className="feature-icon"><Wrench size={20} strokeWidth={1.6} /></div>
+                        <h3>Expert Servicing</h3>
+                        <p>
+                            Book appointments seamlessly through our platform. Our certified mechanics handle 
+                            everything from routine checkups to complex repairs.
+                        </p>
+                    </div>
+
+                    <div className="feature-card">
+                        <div className="feature-icon"><ClipboardList size={20} strokeWidth={1.6} /></div>
+                        <h3>Transparent History</h3>
+                        <p>
+                            A detailed digital record of all your past purchases, part requests, and service 
+                            appointments — always at your fingertips.
+                        </p>
+                    </div>
                 </div>
+
+                {/* Contact */}
+                <section className="contact-card">
+                    <div className="contact-card-header">
+                        <h3>Visit Us</h3>
+                    </div>
+                    <div className="contact-grid">
+                        <div className="contact-item">
+                            <div className="contact-item-icon"><MapPin size={16} strokeWidth={1.6} /></div>
+                            <div className="contact-item-text">
+                                <span className="contact-item-label">Address</span>
+                                <span className="contact-item-value">Patan, Lalitpur</span>
+                            </div>
+                        </div>
+                        <div className="contact-item">
+                            <div className="contact-item-icon"><Mail size={16} strokeWidth={1.6} /></div>
+                            <div className="contact-item-text">
+                                <span className="contact-item-label">Email</span>
+                                <span className="contact-item-value">support@gearup-parts.com</span>
+                            </div>
+                        </div>
+                        <div className="contact-item">
+                            <div className="contact-item-icon"><Phone size={16} strokeWidth={1.6} /></div>
+                            <div className="contact-item-text">
+                                <span className="contact-item-label">Phone</span>
+                                <span className="contact-item-value">+977 9811223344</span>
+                            </div>
+                        </div>
+                        <div className="contact-item">
+                            <div className="contact-item-icon"><Clock size={16} strokeWidth={1.6} /></div>
+                            <div className="contact-item-text">
+                                <span className="contact-item-label">Working Hours</span>
+                                <span className="contact-item-value">Mon – Sat, 8:00 AM – 6:00 PM</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </div>
     );

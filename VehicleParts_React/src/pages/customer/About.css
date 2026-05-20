@@ -1,119 +1,202 @@
-/* Page Background Matching the Rest of the App */
 .about-page {
     min-height: 100vh;
-    background-color: #0f0f0f;
-    background-image: radial-gradient(circle at 1px 1px, #1a1a1a 1px, transparent 1px);
-    background-size: 20px 20px;
+    background: #0a0a0a;
     color: #fff;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
 }
 
 .about-container {
-    max-width: 1200px;
+    max-width: 1100px;
     margin: 0 auto;
-    padding: 40px max(5vw, 20px);
+    padding: 52px max(4vw, 24px) 0;
 }
 
-/* Header Styling */
+/* ── Header ── */
 .about-header {
-    text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 56px;
 }
 
 .about-header h2 {
-    font-size: 28px;
-    color: #ffffff;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: 13px;
+    color: #e8a428;
+    font-weight: 600;
     letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 14px 0;
+}
+
+.about-headline {
+    font-size: 36px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    letter-spacing: -0.5px;
+    margin: 0 0 16px 0;
+    line-height: 1.15;
+    max-width: 520px;
 }
 
 .about-subtitle {
-    color: #aaaaaa;
-    font-size: 15px;
-    letter-spacing: 1px;
+    color: rgba(255,255,255,0.38);
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 460px;
+}
+
+/* ── Mission ── */
+.mission-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(232,164,40,0.4), transparent);
+}
+
+.mission-card p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.6);
+    margin: 0;
+    max-width: 780px;
+}
+
+/* ── Features Grid ── */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
     margin-bottom: 20px;
 }
 
-.header-divider {
-    width: 60px;
-    height: 4px;
-    background-color: #f39c12;
-    margin: 0 auto;
-    border-radius: 2px;
+.feature-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 28px 26px;
+    transition: border-color 0.2s, background 0.2s;
 }
 
-/* Main Content Area */
-.about-content {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+.feature-card:hover {
+    border-color: rgba(255,255,255,0.13);
+    background: rgba(255,255,255,0.05);
 }
 
-/* Reusable Card Component */
-.about-card {
-    background-color: #111111;
-    border: 1px solid #222222;
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-
-.about-card:hover {
-    transform: translateY(-4px);
-    border-color: #333333;
-}
-
-.about-card h3 {
-    font-size: 18px;
-    color: #f39c12;
-    letter-spacing: 1px;
-    margin-bottom: 15px;
+.feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    background: rgba(232,164,40,0.1);
     display: flex;
     align-items: center;
-    gap: 10px;
-    text-transform: uppercase;
+    justify-content: center;
+    color: #e8a428;
+    margin-bottom: 18px;
 }
 
-.about-card p {
-    color: #cccccc;
-    font-size: 15px;
-    line-height: 1.6;
+.feature-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.88);
+    margin: 0 0 10px 0;
+    letter-spacing: 0.1px;
+}
+
+.feature-card p {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.4);
     margin: 0;
 }
 
-/* 3-Column Grid for Features */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
+/* ── Contact Card ── */
+.contact-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 32px 36px;
 }
 
-/* Contact Information Formatting */
-.contact-info {
+.contact-card-header {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.contact-card-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.88);
+    margin: 0;
+    letter-spacing: 0.1px;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.contact-item-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e8a428;
+    flex-shrink: 0;
+}
+
+.contact-item-text {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 3px;
+    padding-top: 2px;
 }
 
-.contact-info p {
-    font-size: 14px;
+.contact-item-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.28);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
 }
 
-.contact-info strong {
-    color: #ffffff;
-    margin-right: 8px;
-    letter-spacing: 0.5px;
+.contact-item-value {
+    font-size: 13px;
+    color: rgba(255,255,255,0.72);
+    font-weight: 400;
 }
 
-/* Responsive Adjustments for Mobile */
-@media (max-width: 768px) {
-    .about-header h2 {
-        font-size: 24px;
+/* ── Responsive ── */
+@media (max-width: 900px) {
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
     }
-    
-    .about-card {
-        padding: 20px;
-    }
+}
+
+@media (max-width: 640px) {
+    .about-headline { font-size: 26px; }
+    .features-grid  { grid-template-columns: 1fr; }
+    .contact-grid   { grid-template-columns: 1fr; }
+    .mission-card   { padding: 24px; }
+    .contact-card   { padding: 24px; }
 }
